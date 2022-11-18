@@ -8,7 +8,7 @@
 #include "GameCharacter.generated.h"
 
 UCLASS()
-class BEYONDTIMEPROJECT_API AGameCharacter : public ACharacter
+class BEYOND_TIME_API AGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
