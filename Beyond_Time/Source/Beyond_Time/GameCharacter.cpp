@@ -84,8 +84,8 @@ void AGameCharacter::RotateY(float ValueY)
 	CameraClampedRotation.Pitch += ValueY * CameraSensitivity;
 	CameraClampedRotation.Pitch = FMath::Clamp(CameraClampedRotation.Pitch, ClampMin, ClampMax);
 	PlayerCamera->SetRelativeRotation(CameraClampedRotation);
-	
 }
+
 
 
 

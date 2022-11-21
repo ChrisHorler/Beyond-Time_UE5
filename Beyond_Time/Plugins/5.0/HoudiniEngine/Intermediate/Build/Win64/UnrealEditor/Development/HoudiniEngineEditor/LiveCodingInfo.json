@@ -1,7 +1,8 @@
 {
 	"RemapUnityFiles": 
 	{
-		"Module.HoudiniEngineEditor.1_of_7.cpp.obj": [
+		"Module.HoudiniEngineEditor.1_of_6.cpp.obj": [
+			"AssetTypeActions_HoudiniAsset.cpp.obj",
 			"HoudiniAssetActorFactory.gen.cpp.obj",
 			"HoudiniAssetFactory.gen.cpp.obj",
 			"HoudiniEditorSubsystem.gen.cpp.obj",
@@ -11,18 +12,15 @@
 			"HoudiniGeoFactory.gen.cpp.obj",
 			"HoudiniParameterDetails.gen.cpp.obj",
 			"HoudiniPublicAPI.gen.cpp.obj",
-			"HoudiniPublicAPIAssetWrapper.gen.cpp.obj"
-		],
-		"Module.HoudiniEngineEditor.2_of_7.cpp.obj": [
+			"HoudiniPublicAPIAssetWrapper.gen.cpp.obj",
 			"HoudiniPublicAPIBlueprintLib.gen.cpp.obj",
 			"HoudiniPublicAPIInputTypes.gen.cpp.obj",
 			"HoudiniPublicAPIObjectBase.gen.cpp.obj",
 			"HoudiniPublicAPIOutputTypes.gen.cpp.obj",
-			"HoudiniPublicAPIProcessHDANode.gen.cpp.obj"
+			"HoudiniPublicAPIProcessHDANode.gen.cpp.obj",
+			"HoudiniTool.gen.cpp.obj"
 		],
-		"Module.HoudiniEngineEditor.3_of_7.cpp.obj": [
-			"HoudiniTool.gen.cpp.obj",
-			"AssetTypeActions_HoudiniAsset.cpp.obj",
+		"Module.HoudiniEngineEditor.2_of_6.cpp.obj": [
 			"HoudiniAssetActorFactory.cpp.obj",
 			"HoudiniAssetBroker.cpp.obj",
 			"HoudiniAssetComponentDetails.cpp.obj",
@@ -31,7 +29,7 @@
 			"HoudiniEngineBakeUtils.cpp.obj",
 			"HoudiniEngineCommands.cpp.obj"
 		],
-		"Module.HoudiniEngineEditor.4_of_7.cpp.obj": [
+		"Module.HoudiniEngineEditor.3_of_6.cpp.obj": [
 			"HoudiniEngineDetails.cpp.obj",
 			"HoudiniEngineEditor.cpp.obj",
 			"HoudiniEngineEditorUtils.cpp.obj",
@@ -41,12 +39,12 @@
 			"HoudiniHandleDetails.cpp.obj",
 			"HoudiniInputDetails.cpp.obj"
 		],
-		"Module.HoudiniEngineEditor.5_of_7.cpp.obj": [
+		"Module.HoudiniEngineEditor.4_of_6.cpp.obj": [
 			"HoudiniOutputDetails.cpp.obj",
 			"HoudiniParameterDetails.cpp.obj",
 			"HoudiniPDGDetails.cpp.obj"
 		],
-		"Module.HoudiniEngineEditor.6_of_7.cpp.obj": [
+		"Module.HoudiniEngineEditor.5_of_6.cpp.obj": [
 			"HoudiniPublicAPI.cpp.obj",
 			"HoudiniPublicAPIAssetWrapper.cpp.obj",
 			"HoudiniPublicAPIBlueprintLib.cpp.obj",
@@ -64,7 +62,7 @@
 			"HoudiniEditorInputTests.cpp.obj",
 			"HoudiniEditorInstancerTests.cpp.obj"
 		],
-		"Module.HoudiniEngineEditor.7_of_7.cpp.obj": [
+		"Module.HoudiniEngineEditor.6_of_6.cpp.obj": [
 			"HoudiniEditorMaterialTests.cpp.obj",
 			"HoudiniEditorMeshTests.cpp.obj",
 			"HoudiniEditorParametersTests.cpp.obj",
