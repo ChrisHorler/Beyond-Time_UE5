@@ -55,7 +55,7 @@ private:
 	FVector3d CameraOffset;
 	
 	UPROPERTY()
-	FRotator3d CameraClampedRotation;
+	FRotator CameraClampedRotation;
 
 	UPROPERTY()
 	bool Jumping;

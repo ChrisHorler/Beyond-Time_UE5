@@ -14,7 +14,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define HOUDINIENGINE_HoudiniPackageParams_generated_h
 
-#define FID_Github_Repository_Beyond_Time_UE5_Beyond_Time_Plugins_5_0_HoudiniEngine_Source_HoudiniEngine_Private_HoudiniPackageParams_h_59_GENERATED_BODY \
+#define FID_Users_Yerio_Desktop_Beyond_Time_UE5_Beyond_Time_Plugins_5_0_HoudiniEngine_Source_HoudiniEngine_Private_HoudiniPackageParams_h_59_GENERATED_BODY \
 	friend struct Z_Construct_UScriptStruct_FHoudiniPackageParams_Statics; \
 	static class UScriptStruct* StaticStruct();
 
@@ -22,7 +22,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 template<> HOUDINIENGINE_API UScriptStruct* StaticStruct<struct FHoudiniPackageParams>();
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID FID_Github_Repository_Beyond_Time_UE5_Beyond_Time_Plugins_5_0_HoudiniEngine_Source_HoudiniEngine_Private_HoudiniPackageParams_h
+#define CURRENT_FILE_ID FID_Users_Yerio_Desktop_Beyond_Time_UE5_Beyond_Time_Plugins_5_0_HoudiniEngine_Source_HoudiniEngine_Private_HoudiniPackageParams_h
 
 
 #define FOREACH_ENUM_EPACKAGEMODE(op) \
