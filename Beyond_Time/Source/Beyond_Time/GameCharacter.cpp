@@ -3,6 +3,7 @@
 
 #include "GameCharacter.h"
 
+#include "TimeTravelComponent.h"
 #include "VectorUtil.h"
 
 // Sets default values
@@ -13,6 +14,7 @@ AGameCharacter::AGameCharacter()
 	
 	PlayerCapsule = GetCapsuleComponent();
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
+	TimeTravelHandler = CreateDefaultSubobject<UTimeTravelComponent>(TEXT("TimeTravelhandler"));
 
 	Jumping = false;
 }                                                                                  
@@ -21,7 +23,6 @@ AGameCharacter::AGameCharacter()
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -44,14 +45,17 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	//Move and rotation input
 	PlayerInputComponent->BindAxis(TEXT("MoveFB"), this, &AGameCharacter::MoveFb);
 	PlayerInputComponent->BindAxis(TEXT("MoveLR"), this, &AGameCharacter::MoveLr);
 	PlayerInputComponent->BindAxis(TEXT("RotateX"), this, &AGameCharacter::RotateX);
 	PlayerInputComponent->BindAxis(TEXT("RotateY"), this, &AGameCharacter::RotateY);
 
+	//jump input
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &AGameCharacter::CheckJump);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Released, this, &AGameCharacter::CheckJump);
 
+	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, TimeTravelHandler, &UTimeTravelComponent::ActivateTimeTravel);
 }
 
 void AGameCharacter::CheckJump()
@@ -85,7 +89,6 @@ void AGameCharacter::RotateY(float ValueY)
 	CameraClampedRotation.Pitch = FMath::Clamp(CameraClampedRotation.Pitch, ClampMin, ClampMax);
 	PlayerCamera->SetRelativeRotation(CameraClampedRotation);
 }
-
 
 
 

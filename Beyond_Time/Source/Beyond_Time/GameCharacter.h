@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "GameCharacter.generated.h"
 
+class UTimeTravelComponent;
 UCLASS()
 class BEYOND_TIME_API AGameCharacter : public ACharacter
 {
@@ -27,7 +28,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
 private:
 	//Methods
 	void MoveFb(float Value);
@@ -35,8 +35,6 @@ private:
 	void RotateX(float ValueX);
 	void RotateY(float ValueY);
 	void CheckJump();
-
-	
 	
 	//Properties
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
@@ -65,4 +63,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* PlayerCapsule;
+
+	UPROPERTY(EditAnywhere)
+	UTimeTravelComponent* TimeTravelHandler;
 };
