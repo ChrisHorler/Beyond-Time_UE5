@@ -21,8 +21,6 @@ void UTimeTravelComponent::BeginPlay()
 
 	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATimeAffectedActor::StaticClass(), AllTimeActors);
-
-	UpdateAllTimeActors();	
 }
 
 // Called every frame
@@ -65,24 +63,27 @@ void UTimeTravelComponent::UpdateAllTimeActors()
 {
 	for(auto TimeActor : AllTimeActors)
 	{
-		auto TimeActorClass = TimeActor->GetName();
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TimeActorClass);
-		                                                                                              
-		// ATimeAffectedActor* TimeActorComponent = TimeActor->
-		//
-		// if(TimeActorComponent == nullptr)
-		// 	continue;
-		//
-		// if(!InPast)
-		// 	TimeActorComponent->LinkedActor->SetActorLocation(GetLocationForTimeTravel(TimeActor->GetActorLocation()) - TimeActorComponent->DifferenceVector);	 				 		
-		// }
-		// else
-		// {
-		// 	//Calculate difference in Rotation and Vector
-		// 	TimeActorComponent->DifferenceVector = TimeActorComponent->OriginalVector - TimeActorComponent->LinkedActor->GetActorLocation();
-		// 	TimeActorComponent->DifferenceRotation = TimeActorComponent->OriginalRotation - TimeActorComponent->LinkedActor->GetActorRotation();
-		// }
+		ATimeAffectedActor* TimeAffectedActor = static_cast<ATimeAffectedActor*>(TimeActor);
+
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, Actor->GetName());
 		
+		if(TimeAffectedActor == nullptr)
+			continue;
+		
+		if(!InPast)
+		{
+			TimeAffectedActor->LinkedActor->SetActorLocation(GetLocationForTimeTravel(TimeActor->GetActorLocation()) - TimeAffectedActor->DifferenceVector);	 				 		
+			TimeAffectedActor->LinkedActor->SetActorRotation(TimeActor->GetActorRotation() - TimeAffectedActor->DifferenceRotation);
+
+			TimeAffectedActor->OriginalVector = TimeAffectedActor->LinkedActor->GetActorLocation();
+			TimeAffectedActor->OriginalRotation = TimeAffectedActor->LinkedActor->GetActorRotation();
+		}
+		else
+		{
+			//Calculate difference in Rotation and Vector
+			TimeAffectedActor->DifferenceVector = TimeAffectedActor->OriginalVector - TimeAffectedActor->LinkedActor->GetActorLocation();
+			TimeAffectedActor->DifferenceRotation = TimeAffectedActor->OriginalRotation - TimeAffectedActor->LinkedActor->GetActorRotation();
+		}
 	}
 }
 
