@@ -3,6 +3,8 @@
 
 #include "TimeTravelComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values for this component's properties
 UTimeTravelComponent::UTimeTravelComponent()
 {
@@ -18,6 +20,9 @@ void UTimeTravelComponent::BeginPlay()
 	Super::BeginPlay();
 
 	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATimeAffectedActor::StaticClass(), AllTimeActors);
+
+	UpdateAllTimeActors();	
 }
 
 // Called every frame
@@ -26,17 +31,17 @@ void UTimeTravelComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if(IsActivated && TeleportTimer > 0)
-	{
-		//timer debug on screen
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable"), TeleportTimer));
-
 		TeleportTimer -= DeltaTime;
-	}
-	
+
+	//When the time runs out
 	if (IsActivated && TeleportTimer <= 0)
 	{
-		//teleportPlayer
+		//Update Time Actors
+		UpdateAllTimeActors();
+		
+		//Teleport Player
 		PlayerPawn->SetActorLocation(GetLocationForTimeTravel(PlayerPawn->GetActorLocation()));
+		
 		IsActivated = false;
 	}
 }
@@ -54,6 +59,31 @@ void UTimeTravelComponent::ActivateTimeTravel()
 	TeleportTimer = TravelDelay;
 	InPast = !InPast;
 	IsActivated = true;
+}
+
+void UTimeTravelComponent::UpdateAllTimeActors()
+{
+	for(auto TimeActor : AllTimeActors)
+	{
+		auto TimeActorClass = TimeActor->GetName();
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TimeActorClass);
+		                                                                                              
+		// ATimeAffectedActor* TimeActorComponent = TimeActor->
+		//
+		// if(TimeActorComponent == nullptr)
+		// 	continue;
+		//
+		// if(!InPast)
+		// 	TimeActorComponent->LinkedActor->SetActorLocation(GetLocationForTimeTravel(TimeActor->GetActorLocation()) - TimeActorComponent->DifferenceVector);	 				 		
+		// }
+		// else
+		// {
+		// 	//Calculate difference in Rotation and Vector
+		// 	TimeActorComponent->DifferenceVector = TimeActorComponent->OriginalVector - TimeActorComponent->LinkedActor->GetActorLocation();
+		// 	TimeActorComponent->DifferenceRotation = TimeActorComponent->OriginalRotation - TimeActorComponent->LinkedActor->GetActorRotation();
+		// }
+		
+	}
 }
 
 

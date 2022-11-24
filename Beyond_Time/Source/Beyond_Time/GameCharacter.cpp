@@ -68,6 +68,7 @@ void AGameCharacter::MoveFb(float Value)
 {
 	//Debug something
 	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable"), Value));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));	
 	
 	AddMovementInput(GetActorForwardVector(), Value * MoveSpeed);	
 }

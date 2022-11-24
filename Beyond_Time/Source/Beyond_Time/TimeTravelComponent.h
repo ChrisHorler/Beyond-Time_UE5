@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameCharacter.h"
+#include "TimeAffectedActor.h"
 #include "Components/ActorComponent.h"
 #include "TimeTravelComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BEYOND_TIME_API UTimeTravelComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -30,6 +31,7 @@ public:
 	FVector GetLocationForTimeTravel(FVector CurrentPosition);
 	
 	void ActivateTimeTravel();
+	void UpdateAllTimeActors();
 
 	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
 	FVector3d TimeTravelPositionOffset;
@@ -45,4 +47,7 @@ public:
 
 	UPROPERTY()
 	APawn* PlayerPawn;
+	
+	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
+	TArray<AActor*> AllTimeActors;
 };
