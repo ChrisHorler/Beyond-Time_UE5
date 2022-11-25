@@ -15,15 +15,11 @@ ATimeAffectedActor::ATimeAffectedActor()
 void ATimeAffectedActor::BeginPlay()
 {
 	Super::BeginPlay();
-	OriginalVector = LinkedActor->GetActorLocation();
-	OriginalRotation = LinkedActor->GetActorRotation();
-	
 }
 
 // Called every frame
 void ATimeAffectedActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

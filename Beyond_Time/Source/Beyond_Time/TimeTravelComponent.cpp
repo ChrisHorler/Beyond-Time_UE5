@@ -28,11 +28,11 @@ void UTimeTravelComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if(IsActivated && TeleportTimer > 0)
+	if(TimeTravelActivated && TeleportTimer > 0)
 		TeleportTimer -= DeltaTime;
 
 	//When the time runs out
-	if (IsActivated && TeleportTimer <= 0)
+	if (TimeTravelActivated && TeleportTimer <= 0)
 	{
 		//Update Time Actors
 		UpdateAllTimeActors();
@@ -40,7 +40,7 @@ void UTimeTravelComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 		//Teleport Player
 		PlayerPawn->SetActorLocation(GetLocationForTimeTravel(PlayerPawn->GetActorLocation()));
 		
-		IsActivated = false;
+		TimeTravelActivated = false;
 	}
 }
 
@@ -51,12 +51,12 @@ FVector UTimeTravelComponent::GetLocationForTimeTravel(FVector CurrentPosition)
 
 void UTimeTravelComponent::ActivateTimeTravel()
 {
-	if(IsActivated)
+	if(TimeTravelActivated)
 		return;
 
 	TeleportTimer = TravelDelay;
 	InPast = !InPast;
-	IsActivated = true;
+	TimeTravelActivated = true;
 }
 
 void UTimeTravelComponent::UpdateAllTimeActors()
@@ -72,17 +72,8 @@ void UTimeTravelComponent::UpdateAllTimeActors()
 		
 		if(!InPast)
 		{
-			TimeAffectedActor->LinkedActor->SetActorLocation(GetLocationForTimeTravel(TimeActor->GetActorLocation()) - TimeAffectedActor->DifferenceVector);	 				 		
-			TimeAffectedActor->LinkedActor->SetActorRotation(TimeActor->GetActorRotation() - TimeAffectedActor->DifferenceRotation);
-
-			TimeAffectedActor->OriginalVector = TimeAffectedActor->LinkedActor->GetActorLocation();
-			TimeAffectedActor->OriginalRotation = TimeAffectedActor->LinkedActor->GetActorRotation();
-		}
-		else
-		{
-			//Calculate difference in Rotation and Vector
-			TimeAffectedActor->DifferenceVector = TimeAffectedActor->OriginalVector - TimeAffectedActor->LinkedActor->GetActorLocation();
-			TimeAffectedActor->DifferenceRotation = TimeAffectedActor->OriginalRotation - TimeAffectedActor->LinkedActor->GetActorRotation();
+			TimeAffectedActor->LinkedActor->SetActorLocation(GetLocationForTimeTravel(TimeActor->GetActorLocation()));	 				 		
+			TimeAffectedActor->LinkedActor->SetActorRotation(TimeActor->GetActorRotation());
 		}
 	}
 }

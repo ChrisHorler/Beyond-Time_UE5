@@ -1,4 +1,4 @@
-C:\Users\Yerio\Desktop\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Source\RiderShaderInfo\RiderShaderInfo.cpp
+"E:\Project Folders\Unreal Projects\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Source\RiderShaderInfo\RiderShaderInfo.cpp"
 /I .
 /I Runtime
 /I Runtime\TraceLog\Public
@@ -7,17 +7,17 @@ C:\Users\Yerio\Desktop\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\S
 /I Runtime\Json\Public
 /I Runtime\RenderCore\Public
 /I Runtime\RHI\Public
-/I C:\Users\Yerio\Desktop\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Source
+/I "E:\Project Folders\Unreal Projects\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Source"
 /external:W0
 /external:I ThirdParty\mimalloc\include
-/external:I "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.34.31933\INCLUDE"
-/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22000.0\ucrt"
-/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22000.0\shared"
-/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22000.0\um"
-/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22000.0\winrt"
-/FI"C:\Users\Yerio\Desktop\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderShaderInfo\Definitions.h"
-/Fo"C:\Users\Yerio\Desktop\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderShaderInfo\RiderShaderInfo.cpp.lc.obj"
-/sourceDependencies"C:\Users\Yerio\Desktop\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderShaderInfo\RiderShaderInfo.cpp.dep.lc.json"
+/external:I "E:\Program Files\Visual Studio Community 2022\VC\Tools\MSVC\14.33.31629\INCLUDE"
+/external:I "D:\Windows Kits\10\include\10.0.22000.0\ucrt"
+/external:I "D:\Windows Kits\10\include\10.0.22000.0\shared"
+/external:I "D:\Windows Kits\10\include\10.0.22000.0\um"
+/external:I "D:\Windows Kits\10\include\10.0.22000.0\winrt"
+/FI"E:\Project Folders\Unreal Projects\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderShaderInfo\Definitions.h"
+/Fo"E:\Project Folders\Unreal Projects\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderShaderInfo\RiderShaderInfo.cpp.lc.obj"
+/sourceDependencies"E:\Project Folders\Unreal Projects\Beyond-Time_UE5\Beyond_Time\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderShaderInfo\RiderShaderInfo.cpp.dep.lc.json"
 /Zc:inline
 /nologo
 /Oi

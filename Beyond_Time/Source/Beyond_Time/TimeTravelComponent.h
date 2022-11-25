@@ -39,7 +39,7 @@ public:
 	UPROPERTY()
 	bool InPast = false;
 	UPROPERTY()
-	bool IsActivated = false;
+	bool TimeTravelActivated = false;
 	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
 	float TravelDelay = 2.0f;
 	UPROPERTY()

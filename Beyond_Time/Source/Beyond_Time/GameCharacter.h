@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PickupHandler.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameCharacter.generated.h"
@@ -35,6 +36,8 @@ private:
 	void RotateX(float ValueX);
 	void RotateY(float ValueY);
 	void CheckJump();
+	void ActivateTimeTravelCheck();
+	void ActivatePickupCheck();
 	
 	//Properties
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
@@ -66,4 +69,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UTimeTravelComponent* TimeTravelHandler;
+
+	UPROPERTY(EditAnywhere)
+	UPickupHandler* PickupHandler;
 };

@@ -26,12 +26,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	AActor* LinkedActor;
 
-	FVector OriginalVector;
-	FVector DifferenceVector;
-	
-	FRotator OriginalRotation;
-	FRotator DifferenceRotation;
-
 private:
 
 	UPROPERTY(EditAnywhere)

@@ -5,6 +5,7 @@
 
 #include "TimeTravelComponent.h"
 #include "VectorUtil.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
@@ -13,8 +14,10 @@ AGameCharacter::AGameCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	PlayerCapsule = GetCapsuleComponent();
+	
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	TimeTravelHandler = CreateDefaultSubobject<UTimeTravelComponent>(TEXT("TimeTravelhandler"));
+	PickupHandler = CreateDefaultSubobject<UPickupHandler>(TEXT("PickupHandler"));
 
 	Jumping = false;
 }                                                                                  
@@ -23,6 +26,7 @@ AGameCharacter::AGameCharacter()
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	PickupHandler->SetupPickupHandler(PlayerCamera);
 }
 
 // Called every frame
@@ -55,12 +59,34 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &AGameCharacter::CheckJump);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Released, this, &AGameCharacter::CheckJump);
 
-	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, TimeTravelHandler, &UTimeTravelComponent::ActivateTimeTravel);
+	//time travel activate
+	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, this, &AGameCharacter::ActivateTimeTravelCheck);
+
+	//pick up object activate
+	PlayerInputComponent->BindAction(TEXT("Pickup"), IE_Pressed, this, &AGameCharacter::ActivatePickupCheck);
 }
 
 void AGameCharacter::CheckJump()
 {
-	Jumping = !Jumping; 
+	if(!TimeTravelHandler->TimeTravelActivated)
+		Jumping = !Jumping; 
+}
+
+void AGameCharacter::ActivateTimeTravelCheck()
+{
+	if(!GetCharacterMovement()->IsFalling())
+		TimeTravelHandler->ActivateTimeTravel();
+}
+
+void AGameCharacter::ActivatePickupCheck()
+{
+	if(!TimeTravelHandler->TimeTravelActivated)
+	{
+		FCollisionQueryParams CollisionQueryParams;
+		CollisionQueryParams.AddIgnoredActor(this);
+
+		PickupHandler->ActivateLineTrace(CollisionQueryParams);
+	}
 }
 
 
@@ -68,19 +94,21 @@ void AGameCharacter::MoveFb(float Value)
 {
 	//Debug something
 	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable"), Value));
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));	
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
 	
-	AddMovementInput(GetActorForwardVector(), Value * MoveSpeed);	
+	if(!TimeTravelHandler->TimeTravelActivated)
+		AddMovementInput(GetActorForwardVector(), Value * MoveSpeed);	
 }
 
 void AGameCharacter::MoveLr(float Value)
 {
-	AddMovementInput(-GetActorRightVector(), Value * MoveSpeed);	
+	if(!TimeTravelHandler->TimeTravelActivated)
+		AddMovementInput(-GetActorRightVector(), Value * MoveSpeed);	
 }
 
 void AGameCharacter::RotateX(float ValueX)
 {
-	AddControllerYawInput(ValueX * CameraSensitivity);	
+	AddControllerYawInput(ValueX * CameraSensitivity);
 }
 
 void AGameCharacter::RotateY(float ValueY)
