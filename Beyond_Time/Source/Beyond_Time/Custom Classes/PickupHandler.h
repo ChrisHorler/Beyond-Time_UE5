@@ -25,11 +25,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ActivateLineTrace(FCollisionQueryParams Params);
-	void SetupPickupHandler(UCameraComponent* CameraComponent);
+	void SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent);
+	void PickupIfObjectIsSelected();
 
 	UPROPERTY()
 	UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere)
+	float MaxInteractDistance = 1000.0f;
 
 	UPROPERTY(EditAnywhere)
 	UChildActorComponent* ItemHeldPoint;
@@ -39,4 +42,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Collision")
 	TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
+
+	FCollisionQueryParams CollisionQueryParams;
+	
 };

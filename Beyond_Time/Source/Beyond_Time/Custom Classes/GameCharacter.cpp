@@ -18,7 +18,6 @@ AGameCharacter::AGameCharacter()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	TimeTravelHandler = CreateDefaultSubobject<UTimeTravelComponent>(TEXT("TimeTravelhandler"));
 	PickupHandler = CreateDefaultSubobject<UPickupHandler>(TEXT("PickupHandler"));
-	CollisionQueryParams.AddIgnoredActor(this);
 
 	Jumping = false;
 }                                                                                  
@@ -27,7 +26,8 @@ AGameCharacter::AGameCharacter()
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	PickupHandler->SetupPickupHandler(PlayerCamera);
+	CollisionQueryParams.AddIgnoredActor(this);
+	PickupHandler->SetupParameters(CollisionQueryParams, PlayerCamera);
 }
 
 // Called every frame
@@ -39,7 +39,7 @@ void AGameCharacter::Tick(float DeltaTime)
 	PlayerCamera->SetRelativeLocation(FVector(GetActorLocation() + CameraOffset));
 	PlayerCamera->SetRelativeRotation(FRotator(PlayerCamera->GetRelativeRotation().Pitch, GetActorRotation().Yaw, PlayerCamera->GetRelativeRotation().Roll));
 
-	if(Jumping)
+	if(Jumping && !TimeTravelHandler->TimeTravelActivated)
 	{
 		Jump();
 	}
@@ -69,8 +69,7 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AGameCharacter::CheckJump()
 {
-	if(!TimeTravelHandler->TimeTravelActivated)
-		Jumping = !Jumping; 
+	Jumping = !Jumping; 
 }
 
 void AGameCharacter::ActivateTimeTravelCheck()
@@ -81,8 +80,10 @@ void AGameCharacter::ActivateTimeTravelCheck()
 
 void AGameCharacter::ActivatePickupCheck()
 {
-	if(!TimeTravelHandler->TimeTravelActivated)
-		PickupHandler->ActivateLineTrace(CollisionQueryParams);
+	if (!TimeTravelHandler->TimeTravelActivated)
+	{
+
+	}		
 }
 
 

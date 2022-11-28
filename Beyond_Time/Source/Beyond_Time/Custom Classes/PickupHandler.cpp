@@ -26,33 +26,35 @@ void UPickupHandler::BeginPlay()
 void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	//interact raycast
+	if (Camera == nullptr)
+		return;
+
+	FVector Start = Camera->GetComponentLocation();	
+
+	FVector ForwardVector = Camera->GetForwardVector();
+	FVector End = ForwardVector * MaxInteractDistance + Start;
+
+	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, TraceChannelProperty, CollisionQueryParams);
+
+	//if actor has been hit
+	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Pickup"))))
+	{
+		
+	}
 }
 
-void UPickupHandler::SetupPickupHandler(UCameraComponent* CameraComponent)
+void UPickupHandler::SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent)
 {
 	if(CameraComponent != nullptr)
 		Camera = CameraComponent;
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Camera is NULL!"));
-	}
+
+	CollisionQueryParams = Params;
 }
 
-void UPickupHandler::ActivateLineTrace(FCollisionQueryParams Params)
+
+void UPickupHandler::PickupIfObjectIsSelected()
 {
-	FVector Start = Camera->GetComponentLocation();
 
-	FVector ForwardVector = Camera->GetForwardVector();
-	FVector End = ForwardVector * 500.0f + Start;
-
-	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 2);
-
-	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, TraceChannelProperty, Params);
-
-	//if actor has been hit
-	if(HitResult.bBlockingHit && IsValid(HitResult.GetActor()))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, *HitResult.GetActor()->GetName());	
-	}
 }
-
