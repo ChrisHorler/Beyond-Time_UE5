@@ -18,6 +18,7 @@ AGameCharacter::AGameCharacter()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	TimeTravelHandler = CreateDefaultSubobject<UTimeTravelComponent>(TEXT("TimeTravelhandler"));
 	PickupHandler = CreateDefaultSubobject<UPickupHandler>(TEXT("PickupHandler"));
+	CollisionQueryParams.AddIgnoredActor(this);
 
 	Jumping = false;
 }                                                                                  
@@ -81,12 +82,7 @@ void AGameCharacter::ActivateTimeTravelCheck()
 void AGameCharacter::ActivatePickupCheck()
 {
 	if(!TimeTravelHandler->TimeTravelActivated)
-	{
-		FCollisionQueryParams CollisionQueryParams;
-		CollisionQueryParams.AddIgnoredActor(this);
-
 		PickupHandler->ActivateLineTrace(CollisionQueryParams);
-	}
 }
 
 

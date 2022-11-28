@@ -72,4 +72,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UPickupHandler* PickupHandler;
+	
+	FCollisionQueryParams CollisionQueryParams;
 };
