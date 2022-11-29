@@ -6,6 +6,7 @@
 #include "TimeTravelComponent.h"
 #include "VectorUtil.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
@@ -20,6 +21,9 @@ AGameCharacter::AGameCharacter()
 	PickupHandler = CreateDefaultSubobject<UPickupHandler>(TEXT("PickupHandler"));
 
 	Jumping = false;
+
+	//PlayerHUD = nullptr;
+	//PlayerHUDClass = nullptr;
 }                                                                                  
 
 // Called when the game starts or when spawned
@@ -28,7 +32,21 @@ void AGameCharacter::BeginPlay()
 	Super::BeginPlay();
 	CollisionQueryParams.AddIgnoredActor(this);
 	PickupHandler->SetupParameters(CollisionQueryParams, PlayerCamera);
+
+	//instance Player HUD
+	if (PlayerHUDClass)
+	{
+		PlayerHUD = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDClass, FName(TEXT("PlayerHUD")));
+		check(PlayerHUD);
+		PlayerHUD->AddToPlayerScreen();
+	}
 }
+
+void AGameCharacter::ChangeCrosshairSprite() 
+{
+	
+}
+
 
 // Called every frame
 void AGameCharacter::Tick(float DeltaTime)
@@ -64,7 +82,8 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, this, &AGameCharacter::ActivateTimeTravelCheck);
 
 	//pick up object activate
-	PlayerInputComponent->BindAction(TEXT("Pickup"), IE_Pressed, this, &AGameCharacter::ActivatePickupCheck);
+	PlayerInputComponent->BindAction(TEXT("Pickup"), IE_Pressed, PickupHandler, &UPickupHandler::PickupSelectedObject);
+	PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, PickupHandler, &UPickupHandler::InteractWithPickedObject);
 }
 
 void AGameCharacter::CheckJump()
@@ -78,13 +97,6 @@ void AGameCharacter::ActivateTimeTravelCheck()
 		TimeTravelHandler->ActivateTimeTravel();
 }
 
-void AGameCharacter::ActivatePickupCheck()
-{
-	if (!TimeTravelHandler->TimeTravelActivated)
-	{
-
-	}		
-}
 
 
 void AGameCharacter::MoveFb(float Value)

@@ -26,7 +26,14 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent);
-	void PickupIfObjectIsSelected();
+	void PickupSelectedObject();
+	void InteractWithPickedObject();
+
+	UPROPERTY()
+	bool IsHoldingPickupObject;
+
+	UPROPERTY()
+	AActor* PickupObject;
 
 	UPROPERTY()
 	UCameraComponent* Camera;

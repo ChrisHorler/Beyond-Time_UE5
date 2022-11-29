@@ -37,7 +37,14 @@ private:
 	void RotateY(float ValueY);
 	void CheckJump();
 	void ActivateTimeTravelCheck();
-	void ActivatePickupCheck();
+	void ChangeCrosshairSprite();
+
+	//User interface
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> PlayerHUDClass;
+
+	UPROPERTY()
+	class UUserWidget* PlayerHUD;
 	
 	//Properties
 	UPROPERTY(EditAnywhere, Category = "Player Settings")

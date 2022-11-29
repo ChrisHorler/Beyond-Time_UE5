@@ -2,6 +2,7 @@
 
 
 #include "PickupHandler.h"
+#include "InteractObject.h"
 
 // Sets default values for this component's properties
 UPickupHandler::UPickupHandler()
@@ -11,6 +12,8 @@ UPickupHandler::UPickupHandler()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	ItemHeldPoint = CreateDefaultSubobject<UChildActorComponent>(TEXT("ItemHeldPoint"));
+	PickupObject = nullptr;
+	IsHoldingPickupObject = false;
 }
 
 
@@ -41,7 +44,22 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	//if actor has been hit
 	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Pickup"))))
 	{
-		
+		if (PickupObject == nullptr)
+		{
+			PickupObject = HitResult.GetActor();
+		}		
+	}
+	else 
+	{
+		if (!IsHoldingPickupObject)
+			PickupObject = nullptr;
+	}
+
+	if (IsHoldingPickupObject && PickupObject != nullptr)
+	{	
+		auto newLocation = (ForwardVector * ItemHeldPoint->GetRelativeLocation().X) + (Camera->GetRightVector() * ItemHeldPoint->GetRelativeLocation().Y) + Start;
+		PickupObject->SetActorLocation(FMath::Lerp(PickupObject->GetActorLocation(), newLocation, 45 * DeltaTime));
+		PickupObject->SetActorRotation(FRotator(0, 0, 0));
 	}
 }
 
@@ -53,8 +71,27 @@ void UPickupHandler::SetupParameters(FCollisionQueryParams Params, UCameraCompon
 	CollisionQueryParams = Params;
 }
 
-
-void UPickupHandler::PickupIfObjectIsSelected()
+void UPickupHandler::PickupSelectedObject()
 {
+	if (PickupObject != nullptr)
+	{
+		IsHoldingPickupObject = !IsHoldingPickupObject;
 
+		UPrimitiveComponent* comp = Cast<UPrimitiveComponent>(PickupObject->GetRootComponent());
+		if (comp)
+		{
+			comp->SetSimulatePhysics(!IsHoldingPickupObject);
+			PickupObject->SetActorEnableCollision(!IsHoldingPickupObject);
+		}
+	}	
+}
+
+void UPickupHandler::InteractWithPickedObject() 
+{
+	if (PickupObject == nullptr)
+		return;
+
+	//InteractObject* InteractObject = PickupObject->FindComponentByClass<class InteractObject>();
+	//check(InteractObject)
+	
 }
