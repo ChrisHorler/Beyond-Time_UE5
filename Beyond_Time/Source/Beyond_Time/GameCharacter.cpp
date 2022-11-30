@@ -42,12 +42,6 @@ void AGameCharacter::BeginPlay()
 	}
 }
 
-void AGameCharacter::ChangeCrosshairSprite() 
-{
-	
-}
-
-
 // Called every frame
 void AGameCharacter::Tick(float DeltaTime)
 {
@@ -61,6 +55,13 @@ void AGameCharacter::Tick(float DeltaTime)
 	{
 		Jump();
 	}
+
+	HandleCrosshairSprite();
+}
+
+void AGameCharacter::HandleCrosshairSprite()
+{
+	
 }
 
 // Called to bind functionality to input

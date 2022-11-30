@@ -51,5 +51,10 @@ public:
 	TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
 
 	FCollisionQueryParams CollisionQueryParams;
-	
+
+	UPROPERTY(EditAnywhere)
+	UTexture* HandTexture;
+	UPROPERTY(EditAnywhere)
+	UTexture* CrosshairTexture;
 };
+

@@ -37,7 +37,7 @@ private:
 	void RotateY(float ValueY);
 	void CheckJump();
 	void ActivateTimeTravelCheck();
-	void ChangeCrosshairSprite();
+	void HandleCrosshairSprite();
 
 	//User interface
 	UPROPERTY(EditAnywhere)
