@@ -11,7 +11,6 @@ UPickupHandler::UPickupHandler()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	ItemHeldPoint = CreateDefaultSubobject<UChildActorComponent>(TEXT("ItemHeldPoint"));
 	PickupObject = nullptr;
 	IsHoldingPickupObject = false;
 }
@@ -50,12 +49,12 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	if (IsHoldingPickupObject && PickupObject != nullptr)
 	{	
-		auto NewForward = Camera->GetForwardVector() * ItemHeldPoint->GetRelativeLocation().X;
-		auto NewRight = Camera->GetRightVector() * ItemHeldPoint->GetRelativeLocation().Y;
-		auto NewUp = Camera->GetUpVector() * ItemHeldPoint->GetRelativeLocation().Z;
+		auto NewForward = Camera->GetForwardVector() * ItemHeldOffset.X;
+		auto NewRight = Camera->GetRightVector() * ItemHeldOffset.Y;
+		auto NewUp = Camera->GetUpVector() * ItemHeldOffset.Z;
 
 		auto newLocation = NewForward + NewRight + NewUp + Start;
-		PickupObject->SetActorLocation(FMath::Lerp(PickupObject->GetActorLocation(), newLocation, 45 * DeltaTime));
+		PickupObject->SetActorLocation(FMath::Lerp(PickupObject->GetActorLocation(), newLocation, PickedUpLerpSpeed * DeltaTime));
 		PickupObject->SetActorRotation(FRotator(0, 0, 0));
 	}
 }

@@ -29,32 +29,35 @@ public:
 	void PickupSelectedObject();
 	void InteractWithPickedObject();
 
-	UPROPERTY()
-	bool IsHoldingPickupObject;
+	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
+		float MaxInteractDistance = 1000.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
+		float PickedUpLerpSpeed = 15.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
+		FVector ItemHeldOffset;
+
+	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
+		UTexture* HandTexture;
+	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
+		UTexture* CrosshairTexture;
 
 	UPROPERTY()
-	AActor* PickupObject;
+		bool IsHoldingPickupObject;
 
 	UPROPERTY()
-	UCameraComponent* Camera;
+		AActor* PickupObject;
 
-	UPROPERTY(EditAnywhere)
-	float MaxInteractDistance = 1000.0f;
-
-	UPROPERTY(EditAnywhere)
-	UChildActorComponent* ItemHeldPoint;
+	UPROPERTY()
+		UCameraComponent* Camera;
 	
 	UPROPERTY()
-	FHitResult HitResult;
+		FHitResult HitResult;
 
 	UPROPERTY(EditAnywhere, Category="Collision")
-	TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
+		TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
 
 	FCollisionQueryParams CollisionQueryParams;
-
-	UPROPERTY(EditAnywhere)
-	UTexture* HandTexture;
-	UPROPERTY(EditAnywhere)
-	UTexture* CrosshairTexture;
 };
 
