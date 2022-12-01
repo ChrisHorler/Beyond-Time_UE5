@@ -5,6 +5,7 @@
 
 #include "TimeTravelComponent.h"
 #include "VectorUtil.h"
+#include "PlayerHUD.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Blueprint/UserWidget.h"
 
@@ -31,15 +32,16 @@ void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	CollisionQueryParams.AddIgnoredActor(this);
-	PickupHandler->SetupParameters(CollisionQueryParams, PlayerCamera);
 
 	//instance Player HUD
 	if (PlayerHUDClass)
 	{
-		PlayerHUD = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDClass, FName(TEXT("PlayerHUD")));
+		PlayerHUD = CreateWidget<UPlayerHUD>(GetWorld(), PlayerHUDClass, FName(TEXT("PlayerHUD")));
 		check(PlayerHUD);
 		PlayerHUD->AddToPlayerScreen();
 	}
+
+	PickupHandler->SetupParameters(CollisionQueryParams, PlayerCamera, PlayerHUD);
 }
 
 // Called every frame

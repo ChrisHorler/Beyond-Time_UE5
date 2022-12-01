@@ -40,12 +40,27 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, TraceChannelProperty, CollisionQueryParams);
 
 	//if actor has been hit
-	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Pickup"))))
+	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Pickup")))) 
+	{
 		if (PickupObject == nullptr)
 			PickupObject = HitResult.GetActor();
-	else 
+	}	
+	else
+	{
 		if (!IsHoldingPickupObject)
 			PickupObject = nullptr;
+	}	
+		
+	//setting crosshair image for better UserExperience
+	if (PlayerHUD != nullptr)
+	{
+		//if PickupObject == false it returns CrosshairTexture
+		//if PickupObject == true and IsHoldingPickupObject == true returns CrosshairTexture
+		//if PickupObject == true and IsHoldingPickupObject == false returns HandTexture
+		PlayerHUD->SetImage(PickupObject ? (IsHoldingPickupObject ? CrosshairTexture : HandTexture) : CrosshairTexture);
+	}
+		
+		
 
 	if (IsHoldingPickupObject && PickupObject != nullptr)
 	{	
@@ -59,11 +74,14 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	}
 }
 
-void UPickupHandler::SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent)
+void UPickupHandler::SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent, UPlayerHUD* HeadsUpDisplay)
 {
 	if(CameraComponent != nullptr)
 		Camera = CameraComponent;
 
+	if (HeadsUpDisplay != nullptr)
+		PlayerHUD = HeadsUpDisplay;
+		
 	CollisionQueryParams = Params;
 }
 
@@ -73,11 +91,14 @@ void UPickupHandler::PickupSelectedObject()
 	{
 		IsHoldingPickupObject = !IsHoldingPickupObject;
 
-		UPrimitiveComponent* comp = Cast<UPrimitiveComponent>(PickupObject->GetRootComponent());
-		if (comp)
+		UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(PickupObject->GetRootComponent());
+		if (Component)
 		{
-			comp->SetSimulatePhysics(!IsHoldingPickupObject);
+			Component->SetSimulatePhysics(!IsHoldingPickupObject);
 			PickupObject->SetActorEnableCollision(!IsHoldingPickupObject);
+
+			if (!IsHoldingPickupObject)
+				PickupObject = nullptr;
 		}
 	}	
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PickupHandler.h"
+#include "PlayerHUD.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameCharacter.generated.h"
@@ -41,10 +42,10 @@ private:
 
 	//User interface
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> PlayerHUDClass;
+	TSubclassOf<class UPlayerHUD> PlayerHUDClass;
 
 	UPROPERTY()
-	class UUserWidget* PlayerHUD;
+	class UPlayerHUD* PlayerHUD;
 	
 	//Properties
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
