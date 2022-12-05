@@ -8,6 +8,7 @@
 #include "PlayerHUD.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Blueprint/UserWidget.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AGameCharacter::AGameCharacter()
@@ -15,23 +16,19 @@ AGameCharacter::AGameCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	PlayerCapsule = GetCapsuleComponent();
-	
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	TimeTravelHandler = CreateDefaultSubobject<UTimeTravelComponent>(TEXT("TimeTravelhandler"));
 	PickupHandler = CreateDefaultSubobject<UPickupHandler>(TEXT("PickupHandler"));
 
 	Jumping = false;
 
-	//PlayerHUD = nullptr;
-	//PlayerHUDClass = nullptr;
 }                                                                                  
 
 // Called when the game starts or when spawned
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	CollisionQueryParams.AddIgnoredActor(this);
+	PlayerController = UGameplayStatics::GetPlayerController(this->GetWorld(), 0);
 
 	//instance Player HUD
 	if (PlayerHUDClass)
@@ -41,6 +38,7 @@ void AGameCharacter::BeginPlay()
 		PlayerHUD->AddToPlayerScreen();
 	}
 
+	CollisionQueryParams.AddIgnoredActor(this);
 	PickupHandler->SetupParameters(CollisionQueryParams, PlayerCamera, PlayerHUD);
 }
 
@@ -49,21 +47,14 @@ void AGameCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//camera movement
+	//Move and rotate camera ralative to player
 	PlayerCamera->SetRelativeLocation(FVector(GetActorLocation() + CameraOffset));
 	PlayerCamera->SetRelativeRotation(FRotator(PlayerCamera->GetRelativeRotation().Pitch, GetActorRotation().Yaw, PlayerCamera->GetRelativeRotation().Roll));
 
-	if(Jumping && !TimeTravelHandler->TimeTravelActivated)
+	if(Jumping && !TimeTravelHandler->TimeTravelActivated && !PlayerDead)
 	{
 		Jump();
 	}
-
-	HandleCrosshairSprite();
-}
-
-void AGameCharacter::HandleCrosshairSprite()
-{
-	
 }
 
 // Called to bind functionality to input
@@ -96,7 +87,7 @@ void AGameCharacter::CheckJump()
 
 void AGameCharacter::ActivateTimeTravelCheck()
 {
-	if(!GetCharacterMovement()->IsFalling())
+	if(!GetCharacterMovement()->IsFalling() && !PlayerDead)
 		TimeTravelHandler->ActivateTimeTravel();
 }
 
@@ -106,29 +97,48 @@ void AGameCharacter::MoveFb(float Value)
 {
 	//Debug something
 	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable"), Value));
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Some debug message!"));
 	
-	if(!TimeTravelHandler->TimeTravelActivated)
+	if(!TimeTravelHandler->TimeTravelActivated && !PlayerDead)
 		AddMovementInput(GetActorForwardVector(), Value * MoveSpeed);	
 }
 
 void AGameCharacter::MoveLr(float Value)
 {
-	if(!TimeTravelHandler->TimeTravelActivated)
+	if(!TimeTravelHandler->TimeTravelActivated && !PlayerDead)
 		AddMovementInput(-GetActorRightVector(), Value * MoveSpeed);	
 }
 
 void AGameCharacter::RotateX(float ValueX)
 {
-	AddControllerYawInput(ValueX * CameraSensitivity);
+	if (!PlayerDead)
+		AddControllerYawInput(ValueX * CameraSensitivity);
 }
 
 void AGameCharacter::RotateY(float ValueY)
 {
-	CameraClampedRotation = PlayerCamera->GetRelativeRotation();
-	CameraClampedRotation.Pitch += ValueY * CameraSensitivity;
-	CameraClampedRotation.Pitch = FMath::Clamp(CameraClampedRotation.Pitch, ClampMin, ClampMax);
-	PlayerCamera->SetRelativeRotation(CameraClampedRotation);
+	if (!PlayerDead)
+	{
+		CameraClampedRotation = PlayerCamera->GetRelativeRotation();
+		CameraClampedRotation.Pitch += ValueY * CameraSensitivity;
+		CameraClampedRotation.Pitch = FMath::Clamp(CameraClampedRotation.Pitch, ClampMin, ClampMax);
+		PlayerCamera->SetRelativeRotation(CameraClampedRotation);
+	}	
+}
+
+void AGameCharacter::SetPlayerRotation(FRotator NewRotation)
+{
+	PlayerController->SetControlRotation(NewRotation);
+}
+
+void AGameCharacter::SetPlayerDeathState(bool State)
+{
+	PlayerDead = State;
+}
+
+bool AGameCharacter::GetPlayerDeathState()
+{
+	return PlayerDead;
 }
 
 

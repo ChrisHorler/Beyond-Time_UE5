@@ -30,6 +30,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void SetPlayerRotation(FRotator NewRotation);
+	void SetPlayerDeathState(bool State);
+	bool GetPlayerDeathState();
+
 private:
 	//Methods
 	void MoveFb(float Value);
@@ -38,7 +42,6 @@ private:
 	void RotateY(float ValueY);
 	void CheckJump();
 	void ActivateTimeTravelCheck();
-	void HandleCrosshairSprite();
 
 	//User interface
 	UPROPERTY(EditAnywhere)
@@ -68,12 +71,15 @@ private:
 
 	UPROPERTY()
 	bool Jumping;
+
+	UPROPERTY()
+	bool PlayerDead = false;
 	
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* PlayerCamera;
 
 	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* PlayerCapsule;
+	APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere)
 	UTimeTravelComponent* TimeTravelHandler;

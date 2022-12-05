@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TimeAffectedActor.generated.h"
+#include "PickupActor.generated.h"
 
 UCLASS()
-class BEYOND_TIME_API ATimeAffectedActor : public AActor
+class BEYOND_TIME_API APickupActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATimeAffectedActor();
+	APickupActor();
 
 	void ResetActor();
 
@@ -25,13 +25,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-	AActor* LinkedActor;
-
-	UPROPERTY()
-	FVector TimeTravelOffset;
-
-private:
 	UPROPERTY()
 	FVector DefaultLocation;
 

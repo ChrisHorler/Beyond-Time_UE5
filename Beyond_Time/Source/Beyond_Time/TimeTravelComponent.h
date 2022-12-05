@@ -34,7 +34,7 @@ public:
 	void UpdateAllTimeActors();
 
 	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
-	FVector3d TimeTravelPositionOffset;
+	FVector TimeTravelLocationOffset;
 
 	UPROPERTY()
 	bool InPast = false;

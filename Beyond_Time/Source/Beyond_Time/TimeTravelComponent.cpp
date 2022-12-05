@@ -21,6 +21,14 @@ void UTimeTravelComponent::BeginPlay()
 
 	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATimeAffectedActor::StaticClass(), AllTimeActors);
+
+	//set time travel offset in each time actor
+	for (auto TimeActor : AllTimeActors)
+	{
+		ATimeAffectedActor* TimeAffectedActor = static_cast<ATimeAffectedActor*>(TimeActor);
+
+		TimeAffectedActor->TimeTravelOffset = TimeTravelLocationOffset;
+	}
 }
 
 // Called every frame
@@ -46,7 +54,7 @@ void UTimeTravelComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 FVector UTimeTravelComponent::GetLocationForTimeTravel(FVector CurrentPosition)
 {
-	return InPast ? CurrentPosition + TimeTravelPositionOffset : CurrentPosition - TimeTravelPositionOffset;	 		
+	return InPast ? CurrentPosition + TimeTravelLocationOffset : CurrentPosition - TimeTravelLocationOffset;	 		
 }
 
 void UTimeTravelComponent::ActivateTimeTravel()
