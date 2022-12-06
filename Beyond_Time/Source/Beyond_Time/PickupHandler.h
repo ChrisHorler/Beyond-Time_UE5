@@ -30,11 +30,12 @@ public:
 	void PickupSelectedObject();
 	void InteractWithPickedObject();
 
+
 	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
 		float MaxInteractDistance = 1000.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		float PickedUpLerpSpeed = 15.0f;
+		float PickedUpLerpSpeed = 2.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
 		FVector ItemHeldOffset;

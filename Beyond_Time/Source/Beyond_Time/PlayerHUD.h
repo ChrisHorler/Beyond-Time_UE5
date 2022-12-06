@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
 #include "PlayerHUD.generated.h"
 
 /**
@@ -20,4 +21,7 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UImage* CrosshairImage;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* DiedText;
 };

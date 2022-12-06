@@ -69,8 +69,12 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		auto NewUp = Camera->GetUpVector() * ItemHeldOffset.Z;
 
 		auto newLocation = NewForward + NewRight + NewUp + Start;
-		PickupObject->SetActorLocation(FMath::Lerp(PickupObject->GetActorLocation(), newLocation, PickedUpLerpSpeed * DeltaTime));
-		PickupObject->SetActorRotation(FRotator(0, 0, 0));
+
+
+		//PickupObject->SetActorLocation(FMath::Lerp(PickupObject->GetActorLocation(), newLocation, FMath::Exp2(-PickedUpLerpSpeed * DeltaTime)));
+		PickupObject->SetActorLocation(newLocation);
+		PickupObject->SetActorRotation(FRotator(Camera->GetRelativeRotation().Pitch, Camera->GetRelativeRotation().Yaw, 0));
+		
 	}
 }
 
@@ -94,6 +98,7 @@ void UPickupHandler::PickupSelectedObject()
 		UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(PickupObject->GetRootComponent());
 		if (Component)
 		{
+			Component->SetEnableGravity(!IsHoldingPickupObject);
 			Component->SetSimulatePhysics(!IsHoldingPickupObject);
 			PickupObject->SetActorEnableCollision(!IsHoldingPickupObject);
 

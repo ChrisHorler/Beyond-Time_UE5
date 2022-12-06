@@ -55,6 +55,9 @@ void AGameCharacter::Tick(float DeltaTime)
 	{
 		Jump();
 	}
+
+	//handle death text
+	PlayerHUD->DiedText->SetOpacity(PlayerDead ? 1.0f : 0.0f);
 }
 
 // Called to bind functionality to input
@@ -112,7 +115,7 @@ void AGameCharacter::MoveLr(float Value)
 void AGameCharacter::RotateX(float ValueX)
 {
 	if (!PlayerDead)
-		AddControllerYawInput(ValueX * CameraSensitivity);
+		AddControllerYawInput(ValueX * CameraSensitivityX);
 }
 
 void AGameCharacter::RotateY(float ValueY)
@@ -120,7 +123,7 @@ void AGameCharacter::RotateY(float ValueY)
 	if (!PlayerDead)
 	{
 		CameraClampedRotation = PlayerCamera->GetRelativeRotation();
-		CameraClampedRotation.Pitch += ValueY * CameraSensitivity;
+		CameraClampedRotation.Pitch += ValueY * CameraSensitivityY;
 		CameraClampedRotation.Pitch = FMath::Clamp(CameraClampedRotation.Pitch, ClampMin, ClampMax);
 		PlayerCamera->SetRelativeRotation(CameraClampedRotation);
 	}	

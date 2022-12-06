@@ -34,6 +34,9 @@ public:
 	void SetPlayerDeathState(bool State);
 	bool GetPlayerDeathState();
 
+	UPROPERTY()
+	class UPlayerHUD* PlayerHUD;
+
 private:
 	//Methods
 	void MoveFb(float Value);
@@ -46,16 +49,15 @@ private:
 	//User interface
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UPlayerHUD> PlayerHUDClass;
-
-	UPROPERTY()
-	class UPlayerHUD* PlayerHUD;
 	
 	//Properties
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
 	float MoveSpeed = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	float CameraSensitivity = 1.0f;
+	float CameraSensitivityX = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	float CameraSensitivityY = 1.0f;
 	
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	float ClampMin = -30;
