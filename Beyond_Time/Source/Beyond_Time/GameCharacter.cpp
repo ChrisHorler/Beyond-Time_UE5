@@ -8,6 +8,7 @@
 #include "PlayerHUD.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Math/UnrealMathUtility.h"
 #include <Kismet/GameplayStatics.h>
 
 // Sets default values
@@ -47,18 +48,43 @@ void AGameCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//Move and rotate camera ralative to player
-	PlayerCamera->SetRelativeLocation(FVector(GetActorLocation() + CameraOffset));
-	PlayerCamera->SetRelativeRotation(FRotator(PlayerCamera->GetRelativeRotation().Pitch, GetActorRotation().Yaw, PlayerCamera->GetRelativeRotation().Roll));
-
+	//handle when play can jump
 	if(Jumping && !TimeTravelHandler->TimeTravelActivated && !PlayerDead)
 	{
 		Jump();
 	}
 
+	//Move and rotate camera ralative to player
+	PlayerCamera->SetRelativeLocation(FVector(GetActorLocation() + CameraOffset));
+	PlayerCamera->SetRelativeRotation(FRotator(PlayerCamera->GetRelativeRotation().Pitch, GetActorRotation().Yaw, PlayerCamera->GetRelativeRotation().Roll));
+
+	//add camera bobbing offset
+	FVector CameraPosition = PlayerCamera->GetRelativeLocation();
+
+	float BobbingOffset = CameraBobbing(DeltaTime);
+	CameraPosition.Z += BobbingOffset;
+
+	PlayerCamera->SetRelativeLocation(CameraPosition);
+
 	//handle death text
 	PlayerHUD->DiedText->SetOpacity(PlayerDead ? 1.0f : 0.0f);
 }
+
+float AGameCharacter::CameraBobbing(float DeltaTime)
+{
+	if (!EnableCameraBobbing)
+		return 0.0f;
+
+	static float TotalTime = 0.0f;
+	TotalTime += DeltaTime;
+
+	float MultiplierAmplitude = (FMath::Abs(InputX) > 0 || FMath::Abs(InputY) > 0) ? BobWalkAmplitudeMutiplier : 1.0f;
+	float MultiplierFrequency = (FMath::Abs(InputX) > 0 || FMath::Abs(InputY) > 0) ? BobWalkFrequencyMutiplier : 1.0f;
+
+	float BobbingOffset = BobAmplitude * MultiplierAmplitude * FMath::Sin(TotalTime * BobFrequency * MultiplierFrequency * PI);
+	return BobbingOffset;
+}
+
 
 // Called to bind functionality to input
 void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -66,8 +92,8 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	//Move and rotation input
-	PlayerInputComponent->BindAxis(TEXT("MoveFB"), this, &AGameCharacter::MoveFb);
-	PlayerInputComponent->BindAxis(TEXT("MoveLR"), this, &AGameCharacter::MoveLr);
+	PlayerInputComponent->BindAxis(TEXT("MoveFb"), this, &AGameCharacter::MoveFb);
+	PlayerInputComponent->BindAxis(TEXT("MoveLr"), this, &AGameCharacter::MoveLr);
 	PlayerInputComponent->BindAxis(TEXT("RotateX"), this, &AGameCharacter::RotateX);
 	PlayerInputComponent->BindAxis(TEXT("RotateY"), this, &AGameCharacter::RotateY);
 
@@ -95,21 +121,29 @@ void AGameCharacter::ActivateTimeTravelCheck()
 }
 
 
-
 void AGameCharacter::MoveFb(float Value)
 {
 	//Debug something
 	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable"), Value));
 	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Some debug message!"));
 	
-	if(!TimeTravelHandler->TimeTravelActivated && !PlayerDead)
-		AddMovementInput(GetActorForwardVector(), Value * MoveSpeed);	
+	if (!TimeTravelHandler->TimeTravelActivated && !PlayerDead) 
+	{
+		AddMovementInput(GetActorForwardVector(), Value * MoveSpeed);
+		PickupHandler->SwayDirectionFB = Value;
+		InputY = Value;
+	}
+		
 }
 
 void AGameCharacter::MoveLr(float Value)
 {
-	if(!TimeTravelHandler->TimeTravelActivated && !PlayerDead)
-		AddMovementInput(-GetActorRightVector(), Value * MoveSpeed);	
+	if (!TimeTravelHandler->TimeTravelActivated && !PlayerDead) 
+	{
+		AddMovementInput(-GetActorRightVector(), Value * MoveSpeed);
+		PickupHandler->SwayDirectionLR = -Value;
+		InputX = Value;
+	}	
 }
 
 void AGameCharacter::RotateX(float ValueX)

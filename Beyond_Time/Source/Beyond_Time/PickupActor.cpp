@@ -16,6 +16,15 @@ void APickupActor::ResetActor()
 {
 	SetActorLocation(DefaultLocation);
 	SetActorRotation(DefaultRotation);
+
+	UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(GetRootComponent());
+	if (Component)
+	{
+		//resets all physics velocity
+		Component->ComponentVelocity = FVector(0, 0, 0);
+		Component->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+		Component->SetPhysicsAngularVelocityInDegrees(FVector(0, 0, 0));
+	}
 }
 
 // Called when the game starts or when spawned

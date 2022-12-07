@@ -35,7 +35,13 @@ public:
 		float MaxInteractDistance = 1000.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		float PickedUpLerpSpeed = 2.0f;
+		float PickupRotationSpeed = 10.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
+		float SwayAmplitude = 10.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
+		float SwayFrequency = 0.2f;
 
 	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
 		FVector ItemHeldOffset;
@@ -44,6 +50,12 @@ public:
 		UTexture2D* HandTexture;
 	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
 		UTexture2D* CrosshairTexture;
+
+	UPROPERTY()
+		float SwayDirectionLR = 1.0f;
+
+	UPROPERTY()
+		float SwayDirectionFB = 1.0f;
 
 	UPROPERTY()
 		bool IsHoldingPickupObject;

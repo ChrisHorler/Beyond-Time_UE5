@@ -45,6 +45,7 @@ private:
 	void RotateY(float ValueY);
 	void CheckJump();
 	void ActivateTimeTravelCheck();
+	float CameraBobbing(float DeltaTime);
 
 	//User interface
 	UPROPERTY(EditAnywhere)
@@ -67,6 +68,24 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	FVector3d CameraOffset;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float EnableCameraBobbing = true;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float BobAmplitude = 0.2f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float BobFrequency = 0.5f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float BobWalkAmplitudeMutiplier = 3.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float BobWalkFrequencyMutiplier = 2.0f;
+
+	float InputX;
+	float InputY;
 	
 	UPROPERTY()
 	FRotator CameraClampedRotation;

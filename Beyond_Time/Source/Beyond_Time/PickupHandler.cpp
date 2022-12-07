@@ -3,6 +3,7 @@
 
 #include "PickupHandler.h"
 #include "InteractableInterface.h"
+#include "Async/TaskGraphInterfaces.h"
 
 // Sets default values for this component's properties
 UPickupHandler::UPickupHandler()
@@ -60,7 +61,6 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		PlayerHUD->SetImage(PickupObject ? (IsHoldingPickupObject ? CrosshairTexture : HandTexture) : CrosshairTexture);
 	}
 		
-		
 
 	if (IsHoldingPickupObject && PickupObject != nullptr)
 	{	
@@ -68,13 +68,15 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		auto NewRight = Camera->GetRightVector() * ItemHeldOffset.Y;
 		auto NewUp = Camera->GetUpVector() * ItemHeldOffset.Z;
 
-		auto newLocation = NewForward + NewRight + NewUp + Start;
-
-
-		//PickupObject->SetActorLocation(FMath::Lerp(PickupObject->GetActorLocation(), newLocation, FMath::Exp2(-PickedUpLerpSpeed * DeltaTime)));
-		PickupObject->SetActorLocation(newLocation);
-		PickupObject->SetActorRotation(FRotator(Camera->GetRelativeRotation().Pitch, Camera->GetRelativeRotation().Yaw, 0));
+		auto NewLocation = NewForward + NewRight + NewUp + Start;
+		auto NewRotation = FRotator(Camera->GetRelativeRotation().Pitch, Camera->GetRelativeRotation().Yaw, 0);
+		//sway rotations for left and right & forward and back movement
+		auto SwayRotationLR = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionLR);
+		auto SwayRotationFB = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionFB);
 		
+		PickupObject->SetActorLocation(NewLocation); //set location to offset point
+		PickupObject->AddActorLocalRotation(FRotator(SwayRotationFB, 0, SwayRotationLR)); //add movement sway to object (direction controlled by movement input)
+		PickupObject->SetActorRotation(FMath::Lerp(PickupObject->GetActorRotation(), NewRotation, PickupRotationSpeed * DeltaTime)); //lerp rotation back to default rotation so sway resets and gives smoother feel
 	}
 }
 
