@@ -2,6 +2,7 @@
 
 
 #include "TimeAffectedActor.h"
+#include "TimeTravelComponent.h"
 
 // Sets default values
 ATimeAffectedActor::ATimeAffectedActor()
@@ -11,10 +12,21 @@ ATimeAffectedActor::ATimeAffectedActor()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 }
 
+void ATimeAffectedActor::ResetActor()
+{
+	SetActorLocation(DefaultLocation);
+	SetActorRotation(DefaultRotation);
+	LinkedActor->SetActorLocation(DefaultLocation - TimeTravelOffset);
+	LinkedActor->SetActorRotation(DefaultRotation);
+}
+
 // Called when the game starts or when spawned
 void ATimeAffectedActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	DefaultLocation = GetActorLocation();
+	DefaultRotation = GetActorRotation();
 }
 
 // Called every frame

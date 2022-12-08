@@ -15,6 +15,8 @@ public:
 	// Sets default values for this actor's properties
 	ATimeAffectedActor();
 
+	void ResetActor();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,7 +28,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	AActor* LinkedActor;
 
+	UPROPERTY()
+	FVector TimeTravelOffset;
+
 private:
+	UPROPERTY()
+	FVector DefaultLocation;
+
+	UPROPERTY()
+	FRotator DefaultRotation;
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Mesh;

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PickupHandler.h"
+#include "PlayerHUD.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameCharacter.generated.h"
@@ -29,6 +30,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void SetPlayerRotation(FRotator NewRotation);
+	void SetPlayerDeathState(bool State);
+	bool GetPlayerDeathState();
+
+	UPROPERTY()
+	class UPlayerHUD* PlayerHUD;
+
 private:
 	//Methods
 	void MoveFb(float Value);
@@ -37,14 +45,20 @@ private:
 	void RotateY(float ValueY);
 	void CheckJump();
 	void ActivateTimeTravelCheck();
-	void ActivatePickupCheck();
+	float CameraBobbing(float DeltaTime);
+
+	//User interface
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UPlayerHUD> PlayerHUDClass;
 	
 	//Properties
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
 	float MoveSpeed = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	float CameraSensitivity = 1.0f;
+	float CameraSensitivityX = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	float CameraSensitivityY = 1.0f;
 	
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	float ClampMin = -30;
@@ -54,18 +68,39 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	FVector3d CameraOffset;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float EnableCameraBobbing = true;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float BobAmplitude = 0.2f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float BobFrequency = 0.5f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float BobWalkAmplitudeMutiplier = 3.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float BobWalkFrequencyMutiplier = 2.0f;
+
+	float InputX;
+	float InputY;
 	
 	UPROPERTY()
 	FRotator CameraClampedRotation;
 
 	UPROPERTY()
 	bool Jumping;
+
+	UPROPERTY()
+	bool PlayerDead = false;
 	
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* PlayerCamera;
 
 	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* PlayerCapsule;
+	APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere)
 	UTimeTravelComponent* TimeTravelHandler;

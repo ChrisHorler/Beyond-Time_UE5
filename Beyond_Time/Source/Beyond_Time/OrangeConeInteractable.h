@@ -3,19 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Camera/CameraComponent.h"
+#include "InteractableInterface.h"
 #include "Components/ActorComponent.h"
-#include "PickupHandler.generated.h"
+#include "OrangeConeInteractable.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class BEYOND_TIME_API UPickupHandler : public UActorComponent
+class BEYOND_TIME_API UOrangeConeInteractable : public UActorComponent, public IInteractableInterface
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UPickupHandler();
+	UOrangeConeInteractable();
 
 protected:
 	// Called when the game starts
@@ -25,18 +25,6 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ActivateLineTrace(FCollisionQueryParams Params);
-	void SetupPickupHandler(UCameraComponent* CameraComponent);
-
-	UPROPERTY()
-	UCameraComponent* Camera;
-
-	UPROPERTY(EditAnywhere)
-	UChildActorComponent* ItemHeldPoint;
-	
-	UPROPERTY()
-	FHitResult HitResult;
-
-	UPROPERTY(EditAnywhere, Category="Collision")
-	TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
+	virtual void OnInteract_Implementation() override;
+		
 };
