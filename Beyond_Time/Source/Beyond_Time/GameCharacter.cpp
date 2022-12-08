@@ -72,7 +72,7 @@ void AGameCharacter::Tick(float DeltaTime)
 
 float AGameCharacter::CameraBobbing(float DeltaTime)
 {
-	if (!EnableCameraBobbing)
+	if (!EnableCameraBobbing || PlayerDead)
 		return 0.0f;
 
 	static float TotalTime = 0.0f;
