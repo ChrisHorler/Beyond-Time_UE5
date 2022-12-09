@@ -173,6 +173,16 @@ void AGameCharacter::SetPlayerDeathState(bool State)
 	PlayerDead = State;
 }
 
+void AGameCharacter::SetPlayerGravityState(bool State)
+{
+	UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(GetRootComponent());
+	if (Component)
+	{
+		//resets all physics velocity
+		Component->SetEnableGravity(State);
+	}
+}
+
 bool AGameCharacter::GetPlayerDeathState()
 {
 	return PlayerDead;

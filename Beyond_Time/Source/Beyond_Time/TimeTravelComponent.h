@@ -35,18 +35,26 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
 	FVector TimeTravelLocationOffset;
+	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
+	float TravelDelay = 3.0f;
+	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
+	float TeleportDelay = 1.5f;
 
 	UPROPERTY()
 	bool InPast = false;
 	UPROPERTY()
 	bool TimeTravelActivated = false;
-	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
-	float TravelDelay = 2.0f;
+
+	UPROPERTY()
+	bool PlayerTeleported = false;
 	UPROPERTY()
 	float TeleportTimer;
 
 	UPROPERTY()
 	APawn* PlayerPawn;
+
+	UPROPERTY()
+	AGameCharacter* PlayerCharacter;
 	
 	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
 	TArray<AActor*> AllTimeActors;
