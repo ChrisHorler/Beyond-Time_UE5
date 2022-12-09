@@ -111,10 +111,7 @@ struct HOUDINIENGINE_API FHoudiniEngineUtils
 
 		// Convert FString to std::string
 		static void ConvertUnrealString(const FString & UnrealString, std::string& String);
-
-		// Gets the world partition grid size from an output.
-		static int GetLandscapePartitionGridSize(UHoudiniOutput* Output);
-
+		
 		// Wrapper for the CreateNode function
 		// As HAPI_CreateNode is an async call, this function actually waits for the node creation to be done before returning
 		static HAPI_Result CreateNode(
@@ -324,9 +321,6 @@ struct HOUDINIENGINE_API FHoudiniEngineUtils
 		// Returns true is the given Geo-Part is an attribute instancer
 		static bool IsAttributeInstancer(
 			const HAPI_NodeId& GeoId, const HAPI_PartId& PartId, EHoudiniInstancerType& OutInstancerType);
-
-		static bool IsValidDataTable(
-			const HAPI_NodeId& GeoId, const HAPI_PartId& PartId);
 
 		// HAPI : Return a give node's parent ID, -1 if none
 		static HAPI_NodeId HapiGetParentNodeId(const HAPI_NodeId& NodeId);
@@ -1054,8 +1048,6 @@ struct HOUDINIENGINE_API FHoudiniEngineUtils
 
 		// Validates InPath by converting it to an absolute path for the platform and then calling FPaths::ValidatePath.
 		static bool ValidatePath(const FString& InPath, FText* OutInvalidPathReason=nullptr);
-
-		static bool DoesFolderExist(const FString& InPath);
 
 		// -------------------------------------------------
 		// PackageParam utilities

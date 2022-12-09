@@ -140,9 +140,6 @@
 #define HAPI_UNREAL_ATTRIB_LANDSCAPE_LAYER_MIN				"unreal_landscape_layer_min"
 #define HAPI_UNREAL_ATTRIB_LANDSCAPE_LAYER_MAX				"unreal_landscape_layer_max"
 
-// World Partition Grid Size
-#define HAPI_UNREAL_ATTRIB_LANDSCAPE_PARTITION_GRID_SIZE    "unreal_landscape_partition_grid_size"
-
 // Path to the level in which an actor should be generated or which contained the input data
 // "." - (Default) Generate geometry in the the current persistent world
 // "Junk/Background" - Path to a Map that is relative to the current persistent world's Map.
@@ -258,8 +255,7 @@
 
 // data tables
 #define HAPI_UNREAL_ATTRIB_DATA_TABLE_PREFIX				"unreal_data_table_"
-#define HAPI_UNREAL_ATTRIB_DATA_TABLE_ROWSTRUCT				"unreal_data_table_rowstruct"
-#define HAPI_UNREAL_ATTRIB_DATA_TABLE_ROWNAME               "unreal_data_table_rowname"
+#define HAPI_UNREAL_ATTRIB_DATA_TABLE_ROWSTRUCT				"unreal_datatable_rowstruct"
 
 // Attributes for Curve Outputs
 #define HAPI_UNREAL_ATTRIB_OUTPUT_UNREAL_CURVE				"unreal_output_curve"

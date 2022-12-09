@@ -65,8 +65,7 @@ struct HOUDINIENGINE_API FHoudiniLandscapeTranslator
 			FHoudiniLandscapeReferenceLocation& LandscapeReferenceLocation,
 			FHoudiniPackageParams InPackageParams,
 			TSet<FString>& ClearedLayers,
-			TArray<UPackage*>& OutCreatedPackages,
-			int WorldPartitionSize);
+			TArray<UPackage*>& OutCreatedPackages);
 
 		static bool OutputLandscape_Generate(
 			UHoudiniOutput* InOutput,
@@ -83,8 +82,7 @@ struct HOUDINIENGINE_API FHoudiniLandscapeTranslator
 			FHoudiniLandscapeReferenceLocation& LandscapeReferenceLocation,
 			TSet<FString>& ClearedLayers,
 			FHoudiniPackageParams InPackageParams,
-			TArray<UPackage*>& OutCreatedPackages,
-			int WorldPartitionSize);
+			TArray<UPackage*>& OutCreatedPackages);
 
 		static bool OutputLandscape_GenerateTile(
 			UHoudiniOutput* InOutput,
@@ -107,8 +105,7 @@ struct HOUDINIENGINE_API FHoudiniLandscapeTranslator
 			const TArray<FName>& AllLayerNames,
 			TSet<FString>& ClearedLayers,
 			TArray<UPackage*>& OutCreatedPackages,
-			TSet<ALandscapeProxy*>& OutActiveLandscapes,
-			int WorldPartitionSize);
+			TSet<ALandscapeProxy*>& OutActiveLandscapes);
 
 		// Outputting landscape as "editable layers" differs significantly from
 		// landscape outputs in "temp mode". To avoid a bigger spaghetti mess, we're
@@ -473,8 +470,7 @@ struct HOUDINIENGINE_API FHoudiniLandscapeTranslator
 			FHoudiniPackageParams InPackageParams,
 			bool bHasEditLayers,
 			const FName& EditLayerName,
-			const FName& AfterLayerName,
-			int WorldPartitionSize);
+			const FName& AfterLayerName);
 
 		// Destroy the given landscape and all its proxies
 		static void DestroyLandscape(ALandscape* Landscape);

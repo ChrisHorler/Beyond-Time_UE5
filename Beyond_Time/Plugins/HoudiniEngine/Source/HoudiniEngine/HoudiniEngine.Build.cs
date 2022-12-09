@@ -32,8 +32,8 @@
 
 /*
 
-    Houdini Version: 19.5.441
-    Houdini Engine Version: 5.0.2
+    Houdini Version: 19.5.435
+    Houdini Engine Version: 5.0.1
     Unreal Version: 5.0.0
 
 */
@@ -47,7 +47,7 @@ public class HoudiniEngine : ModuleRules
 {
     private string GetHFSPath()
     {
-        string HoudiniVersion = "19.5.441";
+        string HoudiniVersion = "19.5.435";
         bool bIsRelease = true;
         string HFSPath = "C:/cygwin/home/prisms/builder-new/Nightly19.5CMake/dev/hfs";
         string RegistryPath = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Side Effects Software";

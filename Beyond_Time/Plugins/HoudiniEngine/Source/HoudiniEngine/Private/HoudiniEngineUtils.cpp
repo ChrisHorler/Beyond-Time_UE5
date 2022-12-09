@@ -968,23 +968,6 @@ FHoudiniEngineUtils::ValidatePath(const FString& InPath, FText* OutInvalidPathRe
 	return FPaths::ValidatePath(AbsolutePath, OutInvalidPathReason); 
 }
 
-bool
-FHoudiniEngineUtils::DoesFolderExist(const FString& InPath)
-{
-	FString AbsolutePath;
-	if (InPath.StartsWith("/Game"))
-	{
-		const FString RelativePath = FPaths::ProjectContentDir() + InPath.Mid(6, InPath.Len() - 6);
-		AbsolutePath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath);
-	}
-	else
-	{
-		AbsolutePath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*InPath);
-	}
-
-	return FPaths::DirectoryExists(AbsolutePath);
-}
-
 void
 FHoudiniEngineUtils::FillInPackageParamsForBakingOutput(
 	FHoudiniPackageParams& OutPackageParams,
@@ -4921,40 +4904,6 @@ FHoudiniEngineUtils::IsAttributeInstancer(const HAPI_NodeId& GeoId, const HAPI_P
 	return false;
 }
 
-bool FHoudiniEngineUtils::IsValidDataTable(const HAPI_NodeId& GeoId, const HAPI_PartId& PartId)
-{
-	HAPI_PartInfo PartInfo;
-	HAPI_Result Error = FHoudiniApi::GetPartInfo(FHoudiniEngine::Get().GetSession(),
-		GeoId, PartId, &PartInfo);
-	if (Error != HAPI_RESULT_SUCCESS)
-	{
-		return false;
-	}
-	TArray<HAPI_StringHandle> AttribNameHandles;
-	AttribNameHandles.SetNum(PartInfo.attributeCounts[HAPI_ATTROWNER_POINT]);
-	Error = FHoudiniApi::GetAttributeNames(FHoudiniEngine::Get().GetSession(),
-		GeoId,
-		PartId,
-		HAPI_ATTROWNER_POINT,
-		AttribNameHandles.GetData(),
-		PartInfo.attributeCounts[HAPI_ATTROWNER_POINT]);
-	if (Error != HAPI_RESULT_SUCCESS)
-	{
-		return false;
-	}
-	TArray<FString> AttribNames;
-	FHoudiniEngineString::SHArrayToFStringArray(AttribNameHandles, AttribNames);
-	for (auto&& Name : AttribNames)
-	{
-		if (Name.StartsWith(HAPI_UNREAL_ATTRIB_DATA_TABLE_PREFIX) && Name != HAPI_UNREAL_ATTRIB_DATA_TABLE_ROWNAME && Name != HAPI_UNREAL_ATTRIB_DATA_TABLE_ROWSTRUCT)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
 bool
 FHoudiniEngineUtils::HapiGetParameterDataAsString(
 	const HAPI_NodeId& NodeId, 
@@ -8394,39 +8343,6 @@ FHoudiniEngineUtils::CreateOrUpdateReferenceInputMergeNode(
 
 	OutHandle = Handle;
 	return true;
-}
-
-int
-FHoudiniEngineUtils::GetLandscapePartitionGridSize(UHoudiniOutput* Output)
-{
-	// The World Partition Grid Size is set to 2 by default in the Landscape editor and
-	// set to 4 in the WorldPartitionConvertCommandlet. By default we set it to 4 to
-	// match the commandlet.
-
-	int WorldPartitionGridSize = 4;
-
-	for (const FHoudiniGeoPartObject& HGPO : Output->GetHoudiniGeoPartObjects())
-	{
-		HAPI_AttributeInfo AttributeInfo;
-		FHoudiniApi::AttributeInfo_Init(&AttributeInfo);
-		TArray<int> AttributeValues;
-		if (FHoudiniEngineUtils::HapiGetAttributeDataAsInteger(
-			HGPO.GeoId, HGPO.PartId,
-			HAPI_UNREAL_ATTRIB_LANDSCAPE_PARTITION_GRID_SIZE,
-			AttributeInfo, AttributeValues, 1, HAPI_ATTROWNER_PRIM, 0, 1) && AttributeValues.Num() > 0)
-		{
-			WorldPartitionGridSize = AttributeValues[0];
-		}
-		else if (FHoudiniEngineUtils::HapiGetAttributeDataAsInteger(
-			HGPO.GeoId, HGPO.PartId,
-			HAPI_UNREAL_ATTRIB_LANDSCAPE_PARTITION_GRID_SIZE,
-			AttributeInfo, AttributeValues, 1, HAPI_ATTROWNER_DETAIL, 0, 1) && AttributeValues.Num() > 0)
-		{
-			WorldPartitionGridSize = AttributeValues[0];
-		}
-	}
-
-	return WorldPartitionGridSize;
 }
 
 #undef LOCTEXT_NAMESPACE

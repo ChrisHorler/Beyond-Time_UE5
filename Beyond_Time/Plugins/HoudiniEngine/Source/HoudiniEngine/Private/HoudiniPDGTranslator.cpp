@@ -400,8 +400,7 @@ FHoudiniPDGTranslator::CreateAllResultObjectsFromPDGOutputs(
 					InPackageParams,
 					//bCreatedNewMaps,
 					ClearedLandscapeLayers,
-					CreatedPackages,
-					FHoudiniEngineUtils::GetLandscapePartitionGridSize(CurOutput));
+					CreatedPackages);
 				// Attach any landscape actors to InOuterComponent
 				LandscapeOutputs.Add(CurOutput);
 			}

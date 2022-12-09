@@ -762,7 +762,6 @@ UHoudiniOutput::UpdateOutputType()
 	int32 CurveCount = 0;
 	int32 VolumeCount = 0;
 	int32 InstancerCount = 0;
-	int32 DataTableCount = 0;
 	for (auto& HGPO : HoudiniGeoPartObjects)
 	{
 		switch (HGPO.Type)
@@ -779,8 +778,6 @@ UHoudiniOutput::UpdateOutputType()
 		case EHoudiniPartType::Instancer:
 			InstancerCount++;
 			break;
-		case EHoudiniPartType::DataTable:
-			DataTableCount++;
 		default:
 		case EHoudiniPartType::Invalid:
 			break;
@@ -808,10 +805,6 @@ UHoudiniOutput::UpdateOutputType()
 	else if (Type == EHoudiniOutputType::GeometryCollection)
 	{
 		// Geometry collections don't rely on HoudiniGeoPartObjects for construction, so keep the same Type.
-	}
-	else if (DataTableCount > 0)
-	{
-		Type = EHoudiniOutputType::DataTable;
 	}
 	else
 	{

@@ -529,7 +529,6 @@ public:
 	UPROPERTY()
 	bool bUseOutputNodes;
 
-
 	// Temporary cook folder
 	UPROPERTY()
 	FDirectoryPath TemporaryCookFolder;

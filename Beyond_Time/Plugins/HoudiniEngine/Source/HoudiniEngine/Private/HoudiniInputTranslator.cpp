@@ -95,7 +95,7 @@ namespace
 		uint32 NumComponents,
 		uint32 Offset,
 		uint32 ComponentSize,
-		const TArray<uint32>& Order)
+		TArray<uint32> Order)
 	{
 		TArray<T> Values;
 		Values.Reserve(NumRows * NumComponents);
@@ -4112,7 +4112,7 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 
 		// Get the object path
 #if ENGINE_MINOR_VERSION < 1
-		FString RowStructName = DataTable->RowStruct->GetPathName();
+		FString RowStructName = DataTable->GetRowStructName().ToString();
 #else
 		FString RowStructName = DataTable->GetRowStructPathName().ToString();
 #endif
@@ -4136,7 +4136,7 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 
 		HOUDINI_CHECK_ERROR_RETURN(FHoudiniApi::AddAttribute(
 			FHoudiniEngine::Get().GetSession(), InputNodeId, 0,
-			HAPI_UNREAL_ATTRIB_DATA_TABLE_ROWNAME, &AttributeInfoPoint), false);
+			"unreal_data_table_0_Name", &AttributeInfoPoint), false);
 
 		TArray<FString> Names;
 		Names.Reserve(NumRows);
@@ -4146,7 +4146,7 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 		}
 
 		HOUDINI_CHECK_ERROR_RETURN(FHoudiniEngineUtils::HapiSetAttributeStringData(
-			Names, InputNodeId, 0, HAPI_UNREAL_ATTRIB_DATA_TABLE_ROWNAME, AttributeInfoPoint), false);
+			Names, InputNodeId, 0, "unreal_data_table_0_Name", AttributeInfoPoint), false);
 	}
 
 	// Now set the attributes values for each "point" of the data table
@@ -4429,12 +4429,12 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 					// Roll, Pitch, Yaw
 					Order = { 1, 0, 2 };
 				}
-				else if (StructName == NAME_Vector2f)
+				else if (StructName == NAME_Vector2f || StructName == NAME_Vector2D)
 				{
 					NumComponents = 2;
 					Storage = HAPI_STORAGETYPE_FLOAT;
 				}
-				else if (StructName == NAME_Vector2d || StructName == NAME_Vector2D)
+				else if (StructName == NAME_Vector2d)
 				{
 					NumComponents = 2;
 					Storage = HAPI_STORAGETYPE_FLOAT64;
@@ -4452,7 +4452,7 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 					TArray<double> RotValues;
 					TArray<double> ScaleValues;
 					TArray<double> TransValues;
-					RotValues.Reserve(4 * NumRows);
+					RotValues.Reserve(3 * NumRows);
 					ScaleValues.Reserve(3 * NumRows);
 					TransValues.Reserve(3 * NumRows);
 					FString RotName = CurAttrName + TEXT("_rotation");
@@ -4466,11 +4466,10 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 							HOUDINI_LOG_WARNING(TEXT("[HapiCreateInputNodeForDataTable]: Invalid transform value for property %s."), *ColumnProp->GetName());
 							continue;
 						}
-						const FQuat4d& Rot = Transform->GetRotation();
-						RotValues.Add(Rot.X);
-						RotValues.Add(Rot.Y);
-						RotValues.Add(Rot.Z);
-						RotValues.Add(Rot.W);
+						const FRotator3d& Rot = Transform->Rotator();
+						RotValues.Add(Rot.Roll);
+						RotValues.Add(Rot.Pitch);
+						RotValues.Add(Rot.Yaw);
 						const FVector& Scale = Transform->GetScale3D();
 						ScaleValues.Add(Scale.X);
 						ScaleValues.Add(Scale.Y);
@@ -4481,7 +4480,7 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 						TransValues.Add(Trans.Z);
 					}
 
-					AttributeInfo.tupleSize = 4;
+					AttributeInfo.tupleSize = 3;
 					AttributeInfo.storage = HAPI_STORAGETYPE_FLOAT64;
 					// Rotation
 					HOUDINI_CHECK_ERROR_RETURN(FHoudiniApi::AddAttribute(
@@ -4491,8 +4490,6 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 					HOUDINI_CHECK_ERROR_RETURN(FHoudiniEngineUtils::HapiSetAttributeDoubleData(
 						RotValues, InputNodeId, 0,
 						RotName, AttributeInfo), false);
-
-					AttributeInfo.tupleSize = 3;
 					// Scale
 					HOUDINI_CHECK_ERROR_RETURN(FHoudiniApi::AddAttribute(
 						FHoudiniEngine::Get().GetSession(), InputNodeId, 0,
@@ -4518,7 +4515,7 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 					TArray<float> RotValues;
 					TArray<float> ScaleValues;
 					TArray<float> TransValues;
-					RotValues.Reserve(4 * NumRows);
+					RotValues.Reserve(3 * NumRows);
 					ScaleValues.Reserve(3 * NumRows);
 					TransValues.Reserve(3 * NumRows);
 					for (; It; ++It)
@@ -4529,11 +4526,10 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 							HOUDINI_LOG_WARNING(TEXT("[HapiCreateInputNodeForDataTable]: Invalid transform value for property %s."), *ColumnProp->GetName());
 							continue;
 						}
-						const FQuat4f& Rot = Transform->GetRotation();
-						RotValues.Add(Rot.X);
-						RotValues.Add(Rot.Y);
-						RotValues.Add(Rot.Z);
-						RotValues.Add(Rot.W);
+						const FRotator3f& Rot = Transform->Rotator();
+						RotValues.Add(Rot.Roll);
+						RotValues.Add(Rot.Pitch);
+						RotValues.Add(Rot.Yaw);
 						const FVector3f& Scale = Transform->GetScale3D();
 						ScaleValues.Add(Scale.X);
 						ScaleValues.Add(Scale.Y);
@@ -4544,7 +4540,7 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 						TransValues.Add(Trans.Z);
 					}
 
-					AttributeInfo.tupleSize = 4;
+					AttributeInfo.tupleSize = 3;
 					AttributeInfo.storage = HAPI_STORAGETYPE_FLOAT;
 					// Rotation
 					HOUDINI_CHECK_ERROR_RETURN(FHoudiniApi::AddAttribute(
@@ -4554,8 +4550,6 @@ FHoudiniInputTranslator::HapiCreateInputNodeForDataTable(const FString& InNodeNa
 					HOUDINI_CHECK_ERROR_RETURN(FHoudiniEngineUtils::HapiSetAttributeFloatData(
 						RotValues, InputNodeId, 0,
 						CurAttrName + TEXT("_rotation"), AttributeInfo), false);
-
-					AttributeInfo.tupleSize = 3;
 					// Scale
 					HOUDINI_CHECK_ERROR_RETURN(FHoudiniApi::AddAttribute(
 						FHoudiniEngine::Get().GetSession(), InputNodeId, 0,

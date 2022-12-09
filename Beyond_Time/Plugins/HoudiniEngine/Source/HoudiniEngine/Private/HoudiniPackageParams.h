@@ -103,6 +103,7 @@ public:
 	// Helper function to create an object and its package
 	template<typename T> T* CreateObjectAndPackage();
 
+
 	// The current cook/baking mode
 	UPROPERTY()
 	EPackageMode PackageMode;
@@ -253,3 +254,5 @@ public:
 	}
 
 };
+
+

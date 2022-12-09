@@ -49,8 +49,7 @@ enum class EHoudiniPartType : uint8
 	Mesh,
 	Instancer,
 	Curve,
-	Volume,
-	DataTable
+	Volume
 };
 
 UENUM()
