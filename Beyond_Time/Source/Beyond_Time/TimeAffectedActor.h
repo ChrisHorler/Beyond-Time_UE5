@@ -16,6 +16,7 @@ public:
 	ATimeAffectedActor();
 
 	void ResetActor();
+	void SetActorPhysics(bool State);
 
 protected:
 	// Called when the game starts or when spawned

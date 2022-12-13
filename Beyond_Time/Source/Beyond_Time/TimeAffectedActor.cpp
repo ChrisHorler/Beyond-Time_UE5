@@ -17,7 +17,16 @@ void ATimeAffectedActor::ResetActor()
 	SetActorLocation(DefaultLocation);
 	SetActorRotation(DefaultRotation);
 	LinkedActor->SetActorLocation(DefaultLocation - TimeTravelOffset);
-	LinkedActor->SetActorRotation(DefaultRotation);
+	LinkedActor->SetActorRotation(DefaultRotation);	
+}
+
+void ATimeAffectedActor::SetActorPhysics(bool State) 
+{
+	UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(GetRootComponent());
+	if (Component)
+	{
+		Component->SetSimulatePhysics(State);
+	}
 }
 
 // Called when the game starts or when spawned

@@ -32,6 +32,7 @@ public:
 	
 	void ActivateTimeTravel();
 	void UpdateAllTimeActors();
+	void UpdateAllTimeActorsPhysics();
 
 	UPROPERTY(EditAnywhere, Category = "Time Travel Settings")
 	FVector TimeTravelLocationOffset;

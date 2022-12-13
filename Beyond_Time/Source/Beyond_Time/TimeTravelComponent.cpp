@@ -29,6 +29,8 @@ void UTimeTravelComponent::BeginPlay()
 		ATimeAffectedActor* TimeAffectedActor = static_cast<ATimeAffectedActor*>(TimeActor);
 
 		TimeAffectedActor->TimeTravelOffset = TimeTravelLocationOffset;
+		TimeAffectedActor->SetActorPhysics(false);
+		TimeAffectedActor->ResetActor(); 
 	}
 }
 
@@ -60,6 +62,7 @@ void UTimeTravelComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 			if (PlayerCharacter)
 			{
 				PlayerCharacter->SetPlayerGravityState(true);
+				UpdateAllTimeActorsPhysics();
 			}
 		
 			TimeTravelActivated = false;
@@ -103,9 +106,24 @@ void UTimeTravelComponent::UpdateAllTimeActors()
 		
 		if(!InPast)
 		{
+			TimeAffectedActor->SetActorPhysics(false);
+
 			TimeAffectedActor->LinkedActor->SetActorLocation(GetLocationForTimeTravel(TimeActor->GetActorLocation()));	 				 		
 			TimeAffectedActor->LinkedActor->SetActorRotation(TimeActor->GetActorRotation());
 		}
+	}
+}
+
+void UTimeTravelComponent::UpdateAllTimeActorsPhysics()
+{
+	for (auto TimeActor : AllTimeActors)
+	{
+		ATimeAffectedActor* TimeAffectedActor = static_cast<ATimeAffectedActor*>(TimeActor);
+
+		if (TimeAffectedActor == nullptr)
+			continue;
+
+		TimeAffectedActor->SetActorPhysics(InPast);
 	}
 }
 
