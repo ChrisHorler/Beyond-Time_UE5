@@ -85,6 +85,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 		float BobWalkFrequencyMutiplier = 2.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float RollWalkMutiplier = 0.1f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float RollStandMutiplier = 0.0015f;
+
 	float InputX;
 	float InputY;
 	
