@@ -32,6 +32,7 @@ public:
 
 	void SetPlayerRotation(FRotator NewRotation);
 	void SetPlayerDeathState(bool State);
+	void SetPlayerGravityState(bool State);
 	bool GetPlayerDeathState();
 
 	UPROPERTY()
@@ -70,7 +71,7 @@ private:
 	FVector3d CameraOffset;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-		float EnableCameraBobbing = true;
+		bool EnableCameraBobbing = true;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 		float BobAmplitude = 0.2f;
@@ -83,6 +84,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 		float BobWalkFrequencyMutiplier = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float RollWalkMutiplier = 0.1f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+		float RollStandMutiplier = 0.0015f;
 
 	float InputX;
 	float InputY;

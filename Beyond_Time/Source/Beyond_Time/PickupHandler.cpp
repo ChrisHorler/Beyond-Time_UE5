@@ -112,7 +112,7 @@ void UPickupHandler::PickupSelectedObject()
 
 void UPickupHandler::InteractWithPickedObject() 
 {
-	if (PickupObject == nullptr && !IsHoldingPickupObject)
+	if (PickupObject == nullptr || !IsHoldingPickupObject)
 		return;
 
 	//check if any component implements the interface

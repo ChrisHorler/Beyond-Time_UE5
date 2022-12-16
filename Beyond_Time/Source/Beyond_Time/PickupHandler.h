@@ -58,7 +58,7 @@ public:
 		float SwayDirectionFB = 1.0f;
 
 	UPROPERTY()
-		bool IsHoldingPickupObject;
+		bool IsHoldingPickupObject = false;
 
 	UPROPERTY()
 		AActor* PickupObject;

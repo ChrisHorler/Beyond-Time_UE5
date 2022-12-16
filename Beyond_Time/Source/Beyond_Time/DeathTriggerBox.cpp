@@ -79,5 +79,13 @@ void ADeathTriggerBox::OnOverlapBegin(AActor* MyOverlappedActor, AActor* OtherAc
 			IsActivated = true;
 		}
 
-	}		
+	}	
+
+	if (OtherActor->ActorHasTag("Pickup"))
+	{
+		for (auto PickupActor : AllPickupActors)
+		{
+			PickupActor->ResetActor();
+		}
+	}
 }

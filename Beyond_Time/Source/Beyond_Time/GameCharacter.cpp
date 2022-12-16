@@ -22,7 +22,6 @@ AGameCharacter::AGameCharacter()
 	PickupHandler = CreateDefaultSubobject<UPickupHandler>(TEXT("PickupHandler"));
 
 	Jumping = false;
-
 }                                                                                  
 
 // Called when the game starts or when spawned
@@ -58,13 +57,21 @@ void AGameCharacter::Tick(float DeltaTime)
 	PlayerCamera->SetRelativeLocation(FVector(GetActorLocation() + CameraOffset));
 	PlayerCamera->SetRelativeRotation(FRotator(PlayerCamera->GetRelativeRotation().Pitch, GetActorRotation().Yaw, PlayerCamera->GetRelativeRotation().Roll));
 
-	//add camera bobbing offset
-	FVector CameraPosition = PlayerCamera->GetRelativeLocation();
+	//add camera bobbing & roll offset
+	FVector CameraLocation = PlayerCamera->GetRelativeLocation();
+	FRotator CameraRotation = PlayerCamera->GetRelativeRotation();
 
+	//add bobbing to Z location
 	float BobbingOffset = CameraBobbing(DeltaTime);
-	CameraPosition.Z += BobbingOffset;
+	CameraLocation.Z += BobbingOffset;
 
-	PlayerCamera->SetRelativeLocation(CameraPosition);
+	//add roll offset to camera
+	float RollMultiplier = (FMath::Abs(InputX) > 0 || FMath::Abs(InputY) > 0) ? RollWalkMutiplier : RollStandMutiplier;
+	CameraRotation.Roll = BobbingOffset * RollMultiplier;
+
+	//set new location & rotation
+	PlayerCamera->SetRelativeRotation(CameraRotation);
+	PlayerCamera->SetRelativeLocation(CameraLocation);
 
 	//handle death text
 	PlayerHUD->DiedText->SetOpacity(PlayerDead ? 1.0f : 0.0f);
@@ -72,7 +79,7 @@ void AGameCharacter::Tick(float DeltaTime)
 
 float AGameCharacter::CameraBobbing(float DeltaTime)
 {
-	if (!EnableCameraBobbing)
+	if (!EnableCameraBobbing || PlayerDead || GetCharacterMovement()->IsFalling())
 		return 0.0f;
 
 	static float TotalTime = 0.0f;
@@ -171,6 +178,16 @@ void AGameCharacter::SetPlayerRotation(FRotator NewRotation)
 void AGameCharacter::SetPlayerDeathState(bool State)
 {
 	PlayerDead = State;
+}
+
+void AGameCharacter::SetPlayerGravityState(bool State)
+{
+	UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(GetRootComponent());
+	if (Component)
+	{
+		//resets all physics velocity
+		Component->SetEnableGravity(State);
+	}
 }
 
 bool AGameCharacter::GetPlayerDeathState()

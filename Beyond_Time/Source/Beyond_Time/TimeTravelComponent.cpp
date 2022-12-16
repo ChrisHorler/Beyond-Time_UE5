@@ -21,6 +21,7 @@ void UTimeTravelComponent::BeginPlay()
 
 	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATimeAffectedActor::StaticClass(), AllTimeActors);
+	PlayerCharacter = Cast<AGameCharacter>(PlayerPawn);
 
 	//set time travel offset in each time actor
 	for (auto TimeActor : AllTimeActors)
@@ -28,6 +29,8 @@ void UTimeTravelComponent::BeginPlay()
 		ATimeAffectedActor* TimeAffectedActor = static_cast<ATimeAffectedActor*>(TimeActor);
 
 		TimeAffectedActor->TimeTravelOffset = TimeTravelLocationOffset;
+		TimeAffectedActor->SetActorPhysics(false);
+		TimeAffectedActor->ResetActor(); 
 	}
 }
 
@@ -39,16 +42,32 @@ void UTimeTravelComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	if(TimeTravelActivated && TeleportTimer > 0)
 		TeleportTimer -= DeltaTime;
 
-	//When the time runs out
-	if (TimeTravelActivated && TeleportTimer <= 0)
+	
+	if (TimeTravelActivated)
 	{
-		//Update Time Actors
-		UpdateAllTimeActors();
+		//When the Timer is below teleport timer, teleport player to new location
+		if (TeleportTimer < TeleportDelay && !PlayerTeleported)
+		{
+			//Update Time Actors
+			UpdateAllTimeActors();
+
+			//Teleport Player
+			PlayerPawn->SetActorLocation(GetLocationForTimeTravel(PlayerPawn->GetActorLocation()));
+			PlayerTeleported = true;
+		}
+		//if timer has reached 0 give control to player and enable gravity again
+		if (TeleportTimer <= 0)
+		{
+			//enable gravity
+			if (PlayerCharacter)
+			{
+				PlayerCharacter->SetPlayerGravityState(true);
+				UpdateAllTimeActorsPhysics();
+			}
 		
-		//Teleport Player
-		PlayerPawn->SetActorLocation(GetLocationForTimeTravel(PlayerPawn->GetActorLocation()));
-		
-		TimeTravelActivated = false;
+			TimeTravelActivated = false;
+			PlayerTeleported = false;
+		}
 	}
 }
 
@@ -64,6 +83,13 @@ void UTimeTravelComponent::ActivateTimeTravel()
 
 	TeleportTimer = TravelDelay;
 	InPast = !InPast;
+
+	//disable gravity	
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->SetPlayerGravityState(false);
+	}
+
 	TimeTravelActivated = true;
 }
 
@@ -80,9 +106,24 @@ void UTimeTravelComponent::UpdateAllTimeActors()
 		
 		if(!InPast)
 		{
+			TimeAffectedActor->SetActorPhysics(false);
+
 			TimeAffectedActor->LinkedActor->SetActorLocation(GetLocationForTimeTravel(TimeActor->GetActorLocation()));	 				 		
 			TimeAffectedActor->LinkedActor->SetActorRotation(TimeActor->GetActorRotation());
 		}
+	}
+}
+
+void UTimeTravelComponent::UpdateAllTimeActorsPhysics()
+{
+	for (auto TimeActor : AllTimeActors)
+	{
+		ATimeAffectedActor* TimeAffectedActor = static_cast<ATimeAffectedActor*>(TimeActor);
+
+		if (TimeAffectedActor == nullptr)
+			continue;
+
+		TimeAffectedActor->SetActorPhysics(InPast);
 	}
 }
 
