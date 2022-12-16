@@ -22,6 +22,7 @@ void UTimeTravelComponent::BeginPlay()
 	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATimeAffectedActor::StaticClass(), AllTimeActors);
 	PlayerCharacter = Cast<AGameCharacter>(PlayerPawn);
+	PlayerTeleported = false;
 
 	//set time travel offset in each time actor
 	for (auto TimeActor : AllTimeActors)
@@ -45,8 +46,8 @@ void UTimeTravelComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	
 	if (TimeTravelActivated)
 	{
-		//When the Timer is below teleport timer, teleport player to new location
-		if (TeleportTimer < TeleportDelay && !PlayerTeleported)
+		//When the Timer is below teleport delay amount, teleport player to new location
+		if (TeleportTimer < (TravelDelay - TeleportDelay) && !PlayerTeleported)
 		{
 			//Update Time Actors
 			UpdateAllTimeActors();
@@ -54,7 +55,10 @@ void UTimeTravelComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 			//Teleport Player
 			PlayerPawn->SetActorLocation(GetLocationForTimeTravel(PlayerPawn->GetActorLocation()));
 			PlayerTeleported = true;
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Player Teleport!"));
 		}
+
 		//if timer has reached 0 give control to player and enable gravity again
 		if (TeleportTimer <= 0)
 		{

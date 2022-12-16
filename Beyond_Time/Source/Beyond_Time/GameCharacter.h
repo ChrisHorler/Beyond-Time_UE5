@@ -57,39 +57,39 @@ private:
 	float MoveSpeed = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	float CameraSensitivityX = 1.0f;
+	float CameraSensitivityX = 0.75f;
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	float CameraSensitivityY = 1.0f;
 	
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	float ClampMin = -30;
+	float ClampMin = -75;
 	
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-	float ClampMax = 40;
+	float ClampMax = 65;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	FVector3d CameraOffset;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-		bool EnableCameraBobbing = true;
+	bool EnableCameraBobbing = true;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-		float BobAmplitude = 0.2f;
+	float BobAmplitude = 0.5f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-		float BobFrequency = 0.5f;
+	float BobFrequency = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-		float BobWalkAmplitudeMutiplier = 3.0f;
+	float BobWalkAmplitudeMutiplier = 4.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-		float BobWalkFrequencyMutiplier = 2.0f;
+	float BobWalkFrequencyMutiplier = 4.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-		float RollWalkMutiplier = 0.1f;
+	float RollWalkMutiplier = 0.04f;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
-		float RollStandMutiplier = 0.0015f;
+	float RollStandMutiplier = 0.0015f;
 
 	float InputX;
 	float InputY;
