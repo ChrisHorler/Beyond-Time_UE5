@@ -10,7 +10,6 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"UMGEditor",
 				"UMG"
 			]
 		}
@@ -26,14 +25,6 @@
 		{
 			"Name": "HoudiniEngine",
 			"Enabled": true
-		},
-		{
-			"Name": "RiderLink",
-			"Enabled": false
-		},
-		{
-			"Name": "RiderSourceCodeAccess",
-			"Enabled": false
 		}
 	]
 }
