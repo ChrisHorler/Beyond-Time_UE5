@@ -21,7 +21,7 @@ UPickupHandler::UPickupHandler()
 void UPickupHandler::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 
@@ -34,24 +34,50 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	if (Camera == nullptr)
 		return;
 
-	FVector Start = Camera->GetComponentLocation();	
+	FVector Start = Camera->GetComponentLocation();
 
 	FVector End = Camera->GetForwardVector() * MaxInteractDistance + Start;
 
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, TraceChannelProperty, CollisionQueryParams);
 
-	//if actor has been hit
-	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Pickup")))) 
+	//pickup time tool for player
+	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("TimeTool"))))
+	{
+		if (!TimeToolPickedUp)
+		{
+			if (TimeTool == nullptr)
+				TimeTool = HitResult.GetActor();
+		}
+		else
+		{
+			auto NewForward = Camera->GetForwardVector() * (ItemHeldOffset.X + TimeToolOffset.X);
+			auto NewRight = Camera->GetRightVector() * (ItemHeldOffset.Y + TimeToolOffset.Y);
+			auto NewUp = Camera->GetUpVector() * (ItemHeldOffset.Z + TimeToolOffset.Z);
+
+			auto NewLocation = NewForward + NewRight + NewUp + Start;
+			auto NewRotation = FRotator(Camera->GetRelativeRotation().Pitch, Camera->GetRelativeRotation().Yaw, 0);
+			//sway rotations for left and right & forward and back movement
+			auto SwayRotationLR = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionLR);
+			auto SwayRotationFB = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionFB);
+
+			TimeTool->SetActorLocation(NewLocation); //set location to offset point
+			TimeTool->AddActorLocalRotation(FRotator(SwayRotationFB, 0, SwayRotationLR)); //add movement sway to object (direction controlled by movement input)
+			TimeTool->SetActorRotation(FMath::Lerp(TimeTool->GetActorRotation(), NewRotation, PickupRotationSpeed * DeltaTime)); //lerp rotation back to default rotation so sway resets and gives smoother feel	
+		}
+	}
+
+	//handle pickup object
+	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Pickup"))))
 	{
 		if (PickupObject == nullptr)
 			PickupObject = HitResult.GetActor();
-	}	
+	}
 	else
 	{
 		if (!IsHoldingPickupObject)
 			PickupObject = nullptr;
-	}	
-		
+	}
+
 	//setting crosshair image for better UserExperience
 	if (PlayerHUD != nullptr)
 	{
@@ -60,10 +86,10 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		//if PickupObject == true and IsHoldingPickupObject == false returns HandTexture
 		PlayerHUD->SetImage(PickupObject ? (IsHoldingPickupObject ? CrosshairTexture : HandTexture) : CrosshairTexture);
 	}
-		
+
 
 	if (IsHoldingPickupObject && PickupObject != nullptr)
-	{	
+	{
 		auto NewForward = Camera->GetForwardVector() * ItemHeldOffset.X;
 		auto NewRight = Camera->GetRightVector() * ItemHeldOffset.Y;
 		auto NewUp = Camera->GetUpVector() * ItemHeldOffset.Z;
@@ -73,7 +99,7 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		//sway rotations for left and right & forward and back movement
 		auto SwayRotationLR = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionLR);
 		auto SwayRotationFB = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionFB);
-		
+
 		PickupObject->SetActorLocation(NewLocation); //set location to offset point
 		PickupObject->AddActorLocalRotation(FRotator(SwayRotationFB, 0, SwayRotationLR)); //add movement sway to object (direction controlled by movement input)
 		PickupObject->SetActorRotation(FMath::Lerp(PickupObject->GetActorRotation(), NewRotation, PickupRotationSpeed * DeltaTime)); //lerp rotation back to default rotation so sway resets and gives smoother feel
@@ -82,17 +108,30 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UPickupHandler::SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent, UPlayerHUD* HeadsUpDisplay)
 {
-	if(CameraComponent != nullptr)
+	if (CameraComponent != nullptr)
 		Camera = CameraComponent;
 
 	if (HeadsUpDisplay != nullptr)
 		PlayerHUD = HeadsUpDisplay;
-		
+
 	CollisionQueryParams = Params;
 }
 
 void UPickupHandler::PickupSelectedObject()
 {
+	if (TimeTool != nullptr && !TimeToolPickedUp)
+	{
+		TimeToolPickedUp = true;
+
+		UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(TimeTool->GetRootComponent());
+		if (Component)
+		{
+			Component->SetEnableGravity(false);
+			Component->SetSimulatePhysics(false);
+			TimeTool->SetActorEnableCollision(false);
+		}
+	}
+
 	if (PickupObject != nullptr)
 	{
 		IsHoldingPickupObject = !IsHoldingPickupObject;
@@ -107,10 +146,10 @@ void UPickupHandler::PickupSelectedObject()
 			if (!IsHoldingPickupObject)
 				PickupObject = nullptr;
 		}
-	}	
+	}
 }
 
-void UPickupHandler::InteractWithPickedObject() 
+void UPickupHandler::InteractWithPickedObject()
 {
 	if (PickupObject == nullptr || !IsHoldingPickupObject)
 		return;
@@ -122,5 +161,5 @@ void UPickupHandler::InteractWithPickedObject()
 		if (ComponentsArray[i]->GetClass()->ImplementsInterface(UInteractableInterface::StaticClass()))
 			IInteractableInterface::Execute_OnInteract(ComponentsArray[i]);
 	}
-	
+
 }
