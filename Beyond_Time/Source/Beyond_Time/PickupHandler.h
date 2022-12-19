@@ -76,5 +76,11 @@ public:
 		TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
 
 	FCollisionQueryParams CollisionQueryParams;
+
+	UPROPERTY(EditAnywhere, Category = "TimeTool Settings")
+	FVector TimeToolOffset;
+
+	AActor* TimeTool;
+	bool TimeToolPickedUp;
 };
 
