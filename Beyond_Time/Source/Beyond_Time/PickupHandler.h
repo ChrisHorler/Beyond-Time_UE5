@@ -78,7 +78,10 @@ public:
 	FCollisionQueryParams CollisionQueryParams;
 
 	UPROPERTY(EditAnywhere, Category = "TimeTool Settings")
-	FVector TimeToolOffset;
+	FVector TimeToolLocationOffset;
+
+	UPROPERTY(EditAnywhere, Category = "TimeTool Settings")
+	FRotator TimeToolRotationOffset;
 
 	AActor* TimeTool;
 	bool TimeToolPickedUp;

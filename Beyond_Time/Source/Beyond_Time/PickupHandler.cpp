@@ -48,22 +48,23 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			if (TimeTool == nullptr)
 				TimeTool = HitResult.GetActor();
 		}
-		else
-		{
-			auto NewForward = Camera->GetForwardVector() * (ItemHeldOffset.X + TimeToolOffset.X);
-			auto NewRight = Camera->GetRightVector() * (ItemHeldOffset.Y + TimeToolOffset.Y);
-			auto NewUp = Camera->GetUpVector() * (ItemHeldOffset.Z + TimeToolOffset.Z);
+	}
 
-			auto NewLocation = NewForward + NewRight + NewUp + Start;
-			auto NewRotation = FRotator(Camera->GetRelativeRotation().Pitch, Camera->GetRelativeRotation().Yaw, 0);
-			//sway rotations for left and right & forward and back movement
-			auto SwayRotationLR = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionLR);
-			auto SwayRotationFB = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionFB);
+	if (TimeToolPickedUp)
+	{
+		auto NewForward = Camera->GetForwardVector() * (ItemHeldOffset.X + TimeToolLocationOffset.X);
+		auto NewRight = Camera->GetRightVector() * (ItemHeldOffset.Y + TimeToolLocationOffset.Y);
+		auto NewUp = Camera->GetUpVector() * (ItemHeldOffset.Z + TimeToolLocationOffset.Z);
 
-			TimeTool->SetActorLocation(NewLocation); //set location to offset point
-			TimeTool->AddActorLocalRotation(FRotator(SwayRotationFB, 0, SwayRotationLR)); //add movement sway to object (direction controlled by movement input)
-			TimeTool->SetActorRotation(FMath::Lerp(TimeTool->GetActorRotation(), NewRotation, PickupRotationSpeed * DeltaTime)); //lerp rotation back to default rotation so sway resets and gives smoother feel	
-		}
+		auto NewLocation = NewForward + NewRight + NewUp + Start;
+		auto NewRotation = FRotator(Camera->GetRelativeRotation().Pitch + TimeToolRotationOffset.Pitch, Camera->GetRelativeRotation().Yaw + TimeToolRotationOffset.Yaw, TimeToolRotationOffset.Roll);
+		//sway rotations for left and right & forward and back movement
+		auto SwayRotationLR = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionLR);
+		auto SwayRotationFB = SwayAmplitude * FMath::Sin(SwayFrequency * DeltaTime * SwayDirectionFB);
+
+		TimeTool->SetActorLocation(NewLocation); //set location to offset point
+		TimeTool->AddActorLocalRotation(FRotator(SwayRotationFB, 0, SwayRotationLR)); //add movement sway to object (direction controlled by movement input)
+		TimeTool->SetActorRotation(FMath::Lerp(TimeTool->GetActorRotation(), NewRotation, PickupRotationSpeed * DeltaTime)); //lerp rotation back to default rotation so sway resets and gives smoother feel	
 	}
 
 	//handle pickup object
