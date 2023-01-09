@@ -21,7 +21,6 @@ UPickupHandler::UPickupHandler()
 void UPickupHandler::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 
@@ -66,6 +65,8 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		TimeTool->AddActorLocalRotation(FRotator(SwayRotationFB, 0, SwayRotationLR)); //add movement sway to object (direction controlled by movement input)
 		TimeTool->SetActorRotation(FMath::Lerp(TimeTool->GetActorRotation(), NewRotation, PickupRotationSpeed * DeltaTime)); //lerp rotation back to default rotation so sway resets and gives smoother feel	
 	}
+	//handle button press
+	HoveringOnButton = HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Button")));
 
 	//handle pickup object
 	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Pickup"))))
@@ -85,7 +86,10 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		//if PickupObject == false it returns CrosshairTexture
 		//if PickupObject == true and IsHoldingPickupObject == true returns CrosshairTexture
 		//if PickupObject == true and IsHoldingPickupObject == false returns HandTexture
-		PlayerHUD->SetImage(PickupObject ? (IsHoldingPickupObject ? CrosshairTexture : HandTexture) : CrosshairTexture);
+		if (!HoveringOnButton)
+			PlayerHUD->SetImage(PickupObject ? (IsHoldingPickupObject ? CrosshairTexture : HandTexture) : CrosshairTexture);
+		else
+			PlayerHUD->SetImage(PressTexture);
 	}
 
 
@@ -150,17 +154,33 @@ void UPickupHandler::PickupSelectedObject()
 	}
 }
 
-void UPickupHandler::InteractWithPickedObject()
+void UPickupHandler::InteractWithHoveringButton()
+{
+	if (HoveringOnButton)
+	{
+		InteractWithObject(HitResult.GetActor());
+	}
+}
+
+
+void UPickupHandler::InteractWithHoldingObject()
 {
 	if (PickupObject == nullptr || !IsHoldingPickupObject)
 		return;
 
+	InteractWithObject(PickupObject);
+}
+
+void UPickupHandler::InteractWithObject(AActor* Object)
+{
 	//check if any component implements the interface
-	auto ComponentsArray = PickupObject->GetComponents().Array();
+	auto ComponentsArray = Object->GetComponents().Array();
+
 	for (size_t i = 0; i < ComponentsArray.Num(); i++)
 	{
 		if (ComponentsArray[i]->GetClass()->ImplementsInterface(UInteractableInterface::StaticClass()))
 			IInteractableInterface::Execute_OnInteract(ComponentsArray[i]);
 	}
-
 }
+
+

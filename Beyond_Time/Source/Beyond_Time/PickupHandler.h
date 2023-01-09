@@ -28,52 +28,59 @@ public:
 
 	void SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent, UPlayerHUD* HeadsUpDisplay);
 	void PickupSelectedObject();
-	void InteractWithPickedObject();
+	void InteractWithObject(AActor* Object);
+	void InteractWithHoveringButton();
+	void InteractWithHoldingObject();
 
 
-	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		float MaxInteractDistance = 1000.0f;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+	float MaxInteractDistance = 1000.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		float PickupRotationSpeed = 10.0f;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+	float PickupRotationSpeed = 10.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		float SwayAmplitude = 10.0f;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+	float SwayAmplitude = 10.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		float SwayFrequency = 0.2f;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+	float SwayFrequency = 0.2f;
 
-	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		FVector ItemHeldOffset;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+	FVector ItemHeldOffset;
 
-	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		UTexture2D* HandTexture;
-	UPROPERTY(EditAnywhere, Category = "Pickup Settings")
-		UTexture2D* CrosshairTexture;
-
-	UPROPERTY()
-		float SwayDirectionLR = 1.0f;
-
-	UPROPERTY()
-		float SwayDirectionFB = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+	UTexture2D* HandTexture;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+	UTexture2D* PressTexture;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+	UTexture2D* CrosshairTexture;
 
 	UPROPERTY()
-		bool IsHoldingPickupObject = false;
+	float SwayDirectionLR = 1.0f;
 
 	UPROPERTY()
-		AActor* PickupObject;
+	float SwayDirectionFB = 1.0f;
 
 	UPROPERTY()
-		UCameraComponent* Camera;
+	bool IsHoldingPickupObject = false;
+
+	UPROPERTY()
+	bool HoveringOnButton;
+
+	UPROPERTY()
+	AActor* PickupObject;
+
+	UPROPERTY()
+	UCameraComponent* Camera;
 	
 	UPROPERTY()
-		FHitResult HitResult;
+	FHitResult HitResult;
 
 	UPROPERTY()
-		UPlayerHUD* PlayerHUD;
+	UPlayerHUD* PlayerHUD;
 
 	UPROPERTY(EditAnywhere, Category="Collision")
-		TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
+	TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
 
 	FCollisionQueryParams CollisionQueryParams;
 
@@ -83,7 +90,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "TimeTool Settings")
 	FRotator TimeToolRotationOffset;
 
+	UPROPERTY()
 	AActor* TimeTool;
+
+	UPROPERTY()
 	bool TimeToolPickedUp;
 };
 

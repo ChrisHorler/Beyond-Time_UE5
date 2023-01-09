@@ -112,8 +112,9 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, this, &AGameCharacter::ActivateTimeTravelCheck);
 
 	//pick up object activate
-	PlayerInputComponent->BindAction(TEXT("Pickup"), IE_Pressed, PickupHandler, &UPickupHandler::PickupSelectedObject);
-	PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, PickupHandler, &UPickupHandler::InteractWithPickedObject);
+	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, PickupHandler, &UPickupHandler::PickupSelectedObject);
+	PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, PickupHandler, &UPickupHandler::InteractWithHoldingObject);
+	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, PickupHandler, &UPickupHandler::InteractWithHoveringButton);
 }
 
 void AGameCharacter::CheckJump()
