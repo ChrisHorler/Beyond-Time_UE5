@@ -6,17 +6,17 @@
 #include "Camera/CameraComponent.h"
 #include "PlayerHUD.h"
 #include "Components/ActorComponent.h"
-#include "PickupHandler.generated.h"
+#include "InteractionHandler.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class BEYOND_TIME_API UPickupHandler : public UActorComponent
+class BEYOND_TIME_API UInteractionHandler : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UPickupHandler();
+	UInteractionHandler();
 
 protected:
 	// Called when the game starts
@@ -34,66 +34,65 @@ public:
 
 
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
-	float MaxInteractDistance = 1000.0f;
+		float MaxInteractDistance = 1000.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
-	float PickupRotationSpeed = 10.0f;
+		float PickupRotationSpeed = 10.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
-	float SwayAmplitude = 10.0f;
+		float SwayAmplitude = 10.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
-	float SwayFrequency = 0.2f;
+		float SwayFrequency = 0.2f;
 
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
-	FVector ItemHeldOffset;
+		FVector ItemHeldOffset;
 
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
-	UTexture2D* HandTexture;
+		UTexture2D* HandTexture;
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
-	UTexture2D* PressTexture;
+		UTexture2D* PressTexture;
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
-	UTexture2D* CrosshairTexture;
+		UTexture2D* CrosshairTexture;
 
 	UPROPERTY()
-	float SwayDirectionLR = 1.0f;
+		float SwayDirectionLR = 1.0f;
 
 	UPROPERTY()
-	float SwayDirectionFB = 1.0f;
+		float SwayDirectionFB = 1.0f;
 
 	UPROPERTY()
-	bool IsHoldingPickupObject = false;
+		bool IsHoldingPickupObject = false;
 
 	UPROPERTY()
-	bool HoveringOnButton;
+		bool HoveringOnButton;
 
 	UPROPERTY()
-	AActor* PickupObject;
+		AActor* PickupObject;
 
 	UPROPERTY()
-	UCameraComponent* Camera;
-	
-	UPROPERTY()
-	FHitResult HitResult;
+		UCameraComponent* Camera;
 
 	UPROPERTY()
-	UPlayerHUD* PlayerHUD;
+		FHitResult HitResult;
 
-	UPROPERTY(EditAnywhere, Category="Collision")
-	TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
+	UPROPERTY()
+		UPlayerHUD* PlayerHUD;
+
+	UPROPERTY(EditAnywhere, Category = "Collision")
+		TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
 
 	FCollisionQueryParams CollisionQueryParams;
 
 	UPROPERTY(EditAnywhere, Category = "TimeTool Settings")
-	FVector TimeToolLocationOffset;
+		FVector TimeToolLocationOffset;
 
 	UPROPERTY(EditAnywhere, Category = "TimeTool Settings")
-	FRotator TimeToolRotationOffset;
+		FRotator TimeToolRotationOffset;
 
 	UPROPERTY()
-	AActor* TimeTool;
+		AActor* TimeTool;
 
 	UPROPERTY()
-	bool TimeToolPickedUp;
+		bool TimeToolPickedUp;
 };
-

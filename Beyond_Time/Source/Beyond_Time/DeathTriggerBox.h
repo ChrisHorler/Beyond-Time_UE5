@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameCharacter.h"
 #include "TimeAffectedActor.h"
-#include "PickupHandler.h"
+#include "InteractionHandler.h"
 #include "PickupActor.h"
 #include "Engine/TriggerBox.h"
 #include "DeathTriggerBox.generated.h"
@@ -48,7 +48,7 @@ private:
 	AGameCharacter* Character;
 
 	UPROPERTY()
-	UPickupHandler* PickupHandler;
+	UInteractionHandler* InteractionHandler;
 
 	// declare overlap begin function
 	UFUNCTION()

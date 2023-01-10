@@ -2,6 +2,7 @@
 
 
 #include "ButtonComponent.h"
+#include "ElectricalPuzzleHandler.h"
 
 // Sets default values for this component's properties
 UButtonComponent::UButtonComponent()
@@ -19,8 +20,7 @@ void UButtonComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	PuzzleHandler = Cast<UElectricalPuzzleHandler>(PuzzleHandlerActor->GetComponentByClass(PuzzleHandlerComponent));
 }
 
 
@@ -28,12 +28,15 @@ void UButtonComponent::BeginPlay()
 void UButtonComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UButtonComponent::OnInteract_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("This is button number: %i"), ButtonNumber));
+	if (ButtonSet || PuzzleHandler->Guessed) 
+		return;
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Guessed number: %i"), ButtonNumber));
+	PuzzleHandler->AddNumberToGuessCode(ButtonNumber);
+	ButtonSet = true;
 }
 

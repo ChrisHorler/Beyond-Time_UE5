@@ -4,16 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "InteractableInterface.h"
+#include "ElectricalPuzzleHandler.h"
 #include "Components/ActorComponent.h"
 #include "ButtonComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BEYOND_TIME_API UButtonComponent : public UActorComponent, public IInteractableInterface
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UButtonComponent();
 
@@ -21,16 +22,26 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void OnInteract_Implementation() override;
 
-	UPROPERTY(EditAnywhere, Category="Button Settings")
-	int ButtonNumber;
+	UPROPERTY(EditAnywhere, Category = "Button Settings")
+		int ButtonNumber;
 
-	UPROPERTY(EditAnywhere, Category="Button Settings")
-	bool ButtonSet;
+	UPROPERTY(EditAnywhere, Category = "Button Settings")
+		bool ButtonSet;
+
+	UPROPERTY(EditAnywhere, Category = "Button Settings")
+		AActor* PuzzleHandlerActor;
+
+	UPROPERTY(EditAnywhere, Category = "Button Settings")
+		TSubclassOf<class UElectricalPuzzleHandler> PuzzleHandlerComponent;
+
+private:
+
+	UPROPERTY()
+		UElectricalPuzzleHandler* PuzzleHandler;
 };
-

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PickupHandler.h"
+#include "InteractionHandler.h"
 #include "PlayerHUD.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
@@ -113,7 +113,7 @@ private:
 	UTimeTravelComponent* TimeTravelHandler;
 
 	UPROPERTY(EditAnywhere)
-	UPickupHandler* PickupHandler;
+	UInteractionHandler* InteractionHandler;
 	
 	FCollisionQueryParams CollisionQueryParams;
 };

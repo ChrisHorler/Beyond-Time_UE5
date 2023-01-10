@@ -19,7 +19,7 @@ AGameCharacter::AGameCharacter()
 	
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	TimeTravelHandler = CreateDefaultSubobject<UTimeTravelComponent>(TEXT("TimeTravelhandler"));
-	PickupHandler = CreateDefaultSubobject<UPickupHandler>(TEXT("PickupHandler"));
+	InteractionHandler = CreateDefaultSubobject<UInteractionHandler>(TEXT("Interaction"));
 
 	Jumping = false;
 }                                                                                  
@@ -39,7 +39,7 @@ void AGameCharacter::BeginPlay()
 	}
 
 	CollisionQueryParams.AddIgnoredActor(this);
-	PickupHandler->SetupParameters(CollisionQueryParams, PlayerCamera, PlayerHUD);
+	InteractionHandler->SetupParameters(CollisionQueryParams, PlayerCamera, PlayerHUD);
 }
 
 // Called every frame
@@ -112,9 +112,9 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, this, &AGameCharacter::ActivateTimeTravelCheck);
 
 	//pick up object activate
-	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, PickupHandler, &UPickupHandler::PickupSelectedObject);
-	PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, PickupHandler, &UPickupHandler::InteractWithHoldingObject);
-	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, PickupHandler, &UPickupHandler::InteractWithHoveringButton);
+	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, InteractionHandler, &UInteractionHandler::PickupSelectedObject);
+	PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, InteractionHandler, &UInteractionHandler::InteractWithHoldingObject);
+	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, InteractionHandler, &UInteractionHandler::InteractWithHoveringButton);
 }
 
 void AGameCharacter::CheckJump()
@@ -138,7 +138,7 @@ void AGameCharacter::MoveFb(float Value)
 	if (!TimeTravelHandler->TimeTravelActivated && !PlayerDead) 
 	{
 		AddMovementInput(GetActorForwardVector(), Value * MoveSpeed);
-		PickupHandler->SwayDirectionFB = Value;
+		InteractionHandler->SwayDirectionFB = Value;
 		InputY = Value;
 	}
 		
@@ -149,7 +149,7 @@ void AGameCharacter::MoveLr(float Value)
 	if (!TimeTravelHandler->TimeTravelActivated && !PlayerDead) 
 	{
 		AddMovementInput(-GetActorRightVector(), Value * MoveSpeed);
-		PickupHandler->SwayDirectionLR = -Value;
+		InteractionHandler->SwayDirectionLR = -Value;
 		InputX = Value;
 	}	
 }

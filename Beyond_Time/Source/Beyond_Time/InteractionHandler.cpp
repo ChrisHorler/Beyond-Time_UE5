@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PickupHandler.h"
+#include "InteractionHandler.h"
 #include "InteractableInterface.h"
 #include "Async/TaskGraphInterfaces.h"
 
 // Sets default values for this component's properties
-UPickupHandler::UPickupHandler()
+UInteractionHandler::UInteractionHandler()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -18,14 +18,15 @@ UPickupHandler::UPickupHandler()
 
 
 // Called when the game starts
-void UPickupHandler::BeginPlay()
+void UInteractionHandler::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 
 // Called every frame
-void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UInteractionHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -111,7 +112,7 @@ void UPickupHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	}
 }
 
-void UPickupHandler::SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent, UPlayerHUD* HeadsUpDisplay)
+void UInteractionHandler::SetupParameters(FCollisionQueryParams Params, UCameraComponent* CameraComponent, UPlayerHUD* HeadsUpDisplay)
 {
 	if (CameraComponent != nullptr)
 		Camera = CameraComponent;
@@ -122,7 +123,7 @@ void UPickupHandler::SetupParameters(FCollisionQueryParams Params, UCameraCompon
 	CollisionQueryParams = Params;
 }
 
-void UPickupHandler::PickupSelectedObject()
+void UInteractionHandler::PickupSelectedObject()
 {
 	if (TimeTool != nullptr && !TimeToolPickedUp)
 	{
@@ -154,7 +155,7 @@ void UPickupHandler::PickupSelectedObject()
 	}
 }
 
-void UPickupHandler::InteractWithHoveringButton()
+void UInteractionHandler::InteractWithHoveringButton()
 {
 	if (HoveringOnButton)
 	{
@@ -163,7 +164,7 @@ void UPickupHandler::InteractWithHoveringButton()
 }
 
 
-void UPickupHandler::InteractWithHoldingObject()
+void UInteractionHandler::InteractWithHoldingObject()
 {
 	if (PickupObject == nullptr || !IsHoldingPickupObject)
 		return;
@@ -171,7 +172,7 @@ void UPickupHandler::InteractWithHoldingObject()
 	InteractWithObject(PickupObject);
 }
 
-void UPickupHandler::InteractWithObject(AActor* Object)
+void UInteractionHandler::InteractWithObject(AActor* Object)
 {
 	//check if any component implements the interface
 	auto ComponentsArray = Object->GetComponents().Array();
@@ -182,5 +183,4 @@ void UPickupHandler::InteractWithObject(AActor* Object)
 			IInteractableInterface::Execute_OnInteract(ComponentsArray[i]);
 	}
 }
-
 

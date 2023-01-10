@@ -3,7 +3,7 @@
 
 #include "DeathTriggerBox.h"
 #include "TimeAffectedActor.h"
-#include "PickupHandler.h"
+#include "InteractionHandler.h"
 #include <Kismet/GameplayStatics.h>
 
 ADeathTriggerBox::ADeathTriggerBox()
@@ -39,11 +39,11 @@ void ADeathTriggerBox::Tick(float DeltaTime)
 		}
 		
 		//reset if holding an object
-		if (PickupHandler != nullptr)
+		if (InteractionHandler != nullptr)
 		{
-			if(PickupHandler->IsHoldingPickupObject)
+			if(InteractionHandler->IsHoldingPickupObject)
 			{
-				PickupHandler->PickupSelectedObject();
+				InteractionHandler->PickupSelectedObject();
 			}
 		}
 
@@ -71,9 +71,9 @@ void ADeathTriggerBox::OnOverlapBegin(AActor* MyOverlappedActor, AActor* OtherAc
 		{
 			DeathTimer = DeathWaitAmount;
 			Character->SetPlayerDeathState(true);
-			PickupHandler = OtherActor->FindComponentByClass<UPickupHandler>();
+			InteractionHandler = OtherActor->FindComponentByClass<UInteractionHandler>();
 
-			if(PickupHandler == nullptr)
+			if(InteractionHandler == nullptr)
 				GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("NULL"));
 
 			IsActivated = true;
